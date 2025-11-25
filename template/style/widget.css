@@ -1,56 +1,74 @@
 /* public/widget.css */
+
+/* ========================================= */
+/* 1. DEFINISI VARIABEL WARNA (PALET BARU)   */
+/* ========================================= */
+:root {
+  /* Palet Warna: Darkest to Lightest */
+  --col-darkest:    #021024;  /* Sidebar, Footer Fullscreen, Header Kuis */
+  --col-navy:       #052659;  /* Bubble User, Floating Button, Panel Kuis */
+  --col-medium-blue:#5483B3;  /* Avatar User, Border Focus, Aksen Utama */
+  --col-soft-blue:  #7DA0CA;  /* Border Inactive, Icon Secondary */
+  --col-pale-blue:  #C1E8FF;  /* Avatar Bot, Hover Backgrounds, Highlights */
+  --col-white:      #ffffff;
+  --col-bg-chat:    #F8FBFF;  /* Background area chat yang sangat muda */
+}
+
+/* ========================================= */
+/* 2. TOMBOL FLOATING (WIDGET BUTTON)        */
+/* ========================================= */
 .chat-button {
-position: fixed;
-bottom: 70px;
-right: 20px;
-width: 60px;
-height: 60px;
-background-color: #27468f;
-color: #ffffff;
-border: none;
-border-radius: 50%;
-cursor: pointer;
-z-index: 9998;
-box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-display: flex;
-align-items: center;
-justify-content: center;
-transition:
-transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-box-shadow 0.25s ease,
-background-color 0.25s ease;
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: var(--col-navy);
+  color: var(--col-white);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 9998;
+  box-shadow: 0 4px 14px rgba(2, 16, 36, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s, box-shadow 0.25s, background-color 0.25s;
 }
 
 .chat-button svg {
-width: 26px;
-height: 26px;
-stroke: #ffffff;
-stroke-width: 1.8;
+  width: 26px;
+  height: 26px;
+  stroke: var(--col-white);
+  stroke-width: 1.8;
 }
 
 .chat-button:hover {
-transform: translateY(-3px) scale(1.04);
-box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5); /* Shadow lebih gelap */
+  transform: translateY(-3px) scale(1.04);
+  background-color: var(--col-medium-blue);
+  box-shadow: 0 10px 25px rgba(2, 16, 36, 0.6);
 }
 
 .chat-button:active {
-transform: scale(0.96);
-box-shadow: 0 3px 10px rgba(15, 23, 42, 0.6);
+  transform: scale(0.96);
 }
 
 .chat-button:focus-visible {
-outline: 2px solid #60A5FA;
-outline-offset: 3px;
+  outline: 2px solid var(--col-medium-blue);
+  outline-offset: 3px;
 }
 
+/* ========================================= */
+/* 3. JENDELA CHAT (POPUP MODE)              */
+/* ========================================= */
 .chat-window {
   position: fixed;
   bottom: 150px;
   right: 20px;
   width: 400px;
   height: 640px;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: var(--col-white);
+  border: 1px solid var(--col-soft-blue);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   display: flex;
@@ -60,449 +78,11 @@ outline-offset: 3px;
   overflow: hidden;
 }
 
-
-/* Layout Utama Fullscreen */
-.chat-window.fullscreen {
-    /* Override style popup */
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    bottom: auto;
-    right: auto;
-    /* Layout baru (flex) */
-    display: flex;
-    flex-direction: row;
-    background: #ffffff;
-}
-
-/* 1. Sidebar Kiri */
-.chat-window.fullscreen .fs-sidebar {
-    width: 90px; /* Lebar sidebar */
-    height: 100vh;
-    background-color: #0F172A; /* Biru sangat gelap (sesuai gambar) */
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transition: width 0.3s ease-in-out; /* Transisi pelebaran */
-}
-
-/* 2. Area Chat Utama (Kanan) */
-.chat-window.fullscreen .fs-chat-area {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #F8FAFC; 
-    position: relative;/* Latar belakang abu-abu sangat muda */
-}
-
-/* 3. Header Fullscreen */
-.chat-window.fullscreen .fs-header {
-    text-align: center;
-    padding: 20px;
-    color: #0F172A; /* Abu-abu */
-    font-weight: 500;
-    border-bottom: 1px solid #E2E8F0;
-    position: relative; /* Untuk tombol close */
-    flex-shrink: 0;
-    max-width: 1024px; /* Atur lebar maksimum konten */
-    margin-left: auto;  /* Pusatkan */
-    margin-right: auto; /* Pusatkan */
-    width: 100%;       /* Agar tetap responsif */
-    box-sizing: border-box;
-}
-
-/* Tombol Close di Fullscreen */
-.chat-window.fullscreen .fs-close {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 28px;
-    color: #94A3B8;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    line-height: 1;
-}
-
-/* 4. Body Fullscreen (Area Pesan) */
-.chat-window.fullscreen .fs-body {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Jarak antar pesan */
-
-    max-width: 1024px; /* Atur lebar maksimum konten */
-    margin-left: auto;  /* Pusatkan */
-    margin-right: auto; /* Pusatkan */
-    width: 100%;       /* Agar tetap responsif */
-    box-sizing: border-box;
-}
-
-/* Container Pesan Fullscreen */
-.chat-window.fullscreen .fs-message {
-    display: flex;
-    align-items: flex-end; /* PENTING: Avatar sejajar dengan Bawah Bubble */
-    gap: 12px; /* Jarak avatar & bubble */
-    max-width: 80%;
-    margin-bottom: 20px; /* Jarak antar pesan */
-}
-
-/* Pesan User (Kanan) */
-.chat-window.fullscreen .fs-message.user {
-    align-self: flex-end;
-    flex-direction: row; /* Pastikan urutan normal, kita atur via HTML structure */
-    justify-content: flex-end; /* Rata kanan */
-}
-
-/* Pesan Buddy (Kiri) */
-.chat-window.fullscreen .fs-message.buddy {
-    align-self: flex-start;
-    justify-content: flex-start;
-}
-
-/* Avatar Fullscreen */
-.chat-window.fullscreen .fs-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #E2E8F0; /* Abu-abu placeholder */
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative; /* Untuk dasi */
-}
-.chat-window.fullscreen .fs-avatar svg {
-    width: 24px;
-    height: 24px;
-    color: #64748B;
-}
-
-
-.chat-window.fullscreen .fs-avatar.user {
-    background-color: #3B82F6; /* Biru */
-}
-.chat-window.fullscreen .fs-avatar.user svg {
-    color: white; /* Ikon putih */
-}
-
-.chat-window.fullscreen .fs-avatar.user .fs-avatar-tie {
-    width: 8px;
-    height: 12px;
-    background: #EF4444; /* Merah */
-    position: absolute;
-    bottom: 4px; /* Posisikan di bawah */
-    clip-path: polygon(50% 100%, 0 0, 100% 0); /* Bentuk dasi */
-}
-
-
-.chat-window.fullscreen .fs-avatar.buddy {
-    background-color: #CBD5E1;
-}
-.chat-window.fullscreen .fs-avatar.buddy svg {
-    color: #475569;
-}
-
-
-/* Bubble Chat Fullscreen */
-.chat-window.fullscreen .fs-bubble {
-    padding: 12px 16px;
-    border-radius: 18px;
-    font-size: 15px;
-    line-height: 1.5;
-    word-wrap: break-word;
-    position: relative;
-}
-
-.chat-window.fullscreen .fs-message.user .fs-bubble {
-    background-color: #0F172A; /* Biru gelap */
-    color: white;
-    /* Sudut kanan bawah lancip (dekat avatar) */
-    border-bottom-right-radius: 4px; 
-    border-bottom-left-radius: 18px;
-}
-
-/* Warna & Bentuk Bubble Bot */
-.chat-window.fullscreen .fs-message.buddy .fs-bubble {
-    background-color: #FFFFFF; 
-    color: #0F172A;
-    border: 1px solid #E2E8F0;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 18px;
-}
-.chat-window.fullscreen .fs-bubble.typing {
-    font-style: italic;
-    color: #64748B;
-}
-
-/* Quick Replies Fullscreen (override) */
-.chat-window.fullscreen .quick-reply-container {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.chat-window.fullscreen .quick-reply-button {
-    background-color: #FFFFFF;
-    border: 1px solid #3B82F6;
-    color: #3B82F6;
-    border-radius: 20px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: left;
-}
-.chat-window.fullscreen .quick-reply-button:hover {
-    background-color: #EFF6FF; /* Biru sangat muda */
-}
-
-
-/* 5. Footer Fullscreen (Input Area) */
-.chat-window.fullscreen .fs-footer {
-    padding: 16px 24px;
-    background-color: #0F172A;
-    border-top: 1px solid #E2E8F0;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-shrink: 0;
-    max-width: 1024px; /* Atur lebar maksimum konten */
-    margin-left: auto;  /* Pusatkan */
-    margin-right: auto; /* Pusatkan */
-    width: 100%;       /* Agar tetap responsif */
-    box-sizing: border-box;
-    border-radius: 10px;
-}
-
-.chat-window.fullscreen .fs-input {
-    flex-grow: 1;
-    border: 1px solid #CBD5E1;
-    border-radius: 10px; /* Lebih bulat */
-    padding: 12px 20px;
-    font-size: 15px;
-    outline: none;
-}
-.chat-window.fullscreen .fs-input:focus {
-    border-color: #3B82F6;
-    box-shadow: 0 0 0 2px #BFDBFE;
-}
-
-.chat-window.fullscreen .fs-send-button {
-    background: none;
-    border: none;
-    color: #3B82F6; /* Biru */
-    cursor: pointer;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.chat-window.fullscreen .fs-send-button svg {
-    width: 24px;
-    height: 24px;
-}
-.chat-window.fullscreen .fs-send-button:disabled {
-    color: #94A3B8; /* Abu-abu */
-    cursor: not-allowed;
-}
-
-/* --- Sembunyikan Elemen Popup Asli --- */
-/* Pastikan elemen popup asli tersembunyi saat fullscreen */
-.chat-window.fullscreen .chat-header,
-.chat-window.fullscreen .chat-body,
-.chat-window.fullscreen .chat-footer {
-    display: none;
-}
-
-/* (BARU) Saat kuis aktif, lebarkan sidebar */
-.chat-window.fullscreen .fs-sidebar.quiz-active {
-    width: 55%; /* Lebar panel kuis (sesuai gambar) */
-    min-width: 400px;
-    max-width: 500px;
-    background-color: #2C5282; /* Latar kuis (biru-abu gelap) */
-}
-
-/* --- STYLING BARU UNTUK PANEL KUIS --- */
-
-.fs-quiz-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.2s ease 0.1s;
-    flex-shrink: 0;
-}
-.fs-sidebar.quiz-active .fs-quiz-container {
-    opacity: 1;
-}
-
-/* Header Kuis (BARU: Progress Bar) */
-.fs-quiz-header {
-    padding: 24px;
-    flex-shrink: 0;
-    background: #2C5282; /* Biru tua */
-    position: relative; /* Untuk counter */
-}
-.fs-quiz-header h4 {
-    font-size: 1.1em;
-    font-weight: 600;
-    margin: 0 0 15px 0;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-.fs-quiz-progress-bar {
-    display: flex;
-    gap: 4px; /* Jarak antar segmen */
-    width: 100%;
-}
-.fs-quiz-progress-segment {
-    height: 8px;
-    flex-grow: 1;
-    background: rgba(255, 255, 255, 0.3); /* Putih transparan (pending) */
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-.fs-quiz-progress-segment.completed {
-    background: #38A169; /* Hijau (selesai) */
-}
-.fs-quiz-progress-segment.active {
-    background: #F6AD55; /* Oranye (aktif) */
-}
-
-.fs-quiz-counter {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
-
-/* Body Kuis (Soal) */
-.fs-quiz-form {
-    flex-grow: 1;
-    overflow-y: auto; /* Jika soalnya panjang */
-    padding: 24px;
-}
-
-.fs-quiz-desc {
-    font-size: 1.1em;
-    font-weight: 500;
-    margin-bottom: 24px;
-    line-height: 1.5;
-    color: #E2E8F0;
-}
-
-.fs-quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-/* Tombol Opsi Jawaban (BARU) */
-.fs-quiz-option-btn {
-    display: block;
-    width: 100%;
-    background: linear-gradient(to right, #3182CE, #2B6CB0); /* Gradien biru */
-    border: 1px solid #4299E1;
-    color: white;
-    padding: 14px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1em;
-    text-align: left;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.fs-quiz-option-btn:hover {
-    background: linear-gradient(to right, #2B6CB0, #3182CE);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-.fs-quiz-option-btn span {
-    font-weight: 600;
-    margin-right: 8px;
-    color: #BEE3F8; /* Biru muda (A, B, C, D) */
-}
-/* Tombol Opsi Terpilih */
-.fs-quiz-option-btn.selected {
-    background: #E53E3E; /* Merah (atau warna lain jika mau) */
-    border-color: #C53030;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-
-/* Footer Kuis (Navigasi) */
-.fs-quiz-footer {
-    padding: 20px 24px;
-    border-top: 1px solid #4A5568;
-    flex-shrink: 0;
-    background: #2C5282; /* Biru tua */
-    display: flex;
-    justify-content: space-between;
-}
-
-/* Tombol Navigasi (Prev/Next) */
-.fs-quiz-nav-btn {
-    background: #4A5568; /* Abu-abu gelap */
-    color: white;
-    border: 1px solid #718096;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 0.9em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-.fs-quiz-nav-btn:hover {
-    background: #5A6578;
-}
-.fs-quiz-nav-btn:disabled {
-    background: #2D3748;
-    color: #718096;
-    cursor: not-allowed;
-    border-color: #4A5568;
-}
-
-/* Tombol Submit Kuis (di akhir) */
-.fs-quiz-submit {
-    background: #38A169; /* Hijau */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.9em;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 10px 16px;
-    transition: background 0.2s ease;
-}
-.fs-quiz-submit:hover {
-    background: #2F855A;
-}
-.fs-quiz-submit:disabled {
-    background: #A0AEC0;
-    cursor: not-allowed;
-}
-
-
+/* Header Popup */
 .chat-header {
   padding: 15px;
-  background-color: #0F172A;
-  color: white;
+  background-color: var(--col-darkest);
+  color: var(--col-white);
   font-weight: bold;
   font-size: 18px;
   flex-shrink: 0;
@@ -513,12 +93,11 @@ outline-offset: 3px;
   border-top-right-radius: 10px;
 }
 
-
-/* Tombol untuk 'Fullscreen' */
-.chat-header-fullscreen {
+.chat-header-fullscreen,
+.chat-header-close {
   background: none;
   border: none;
-  color: white;
+  color: var(--col-white);
   cursor: pointer;
   padding: 0 5px;
   line-height: 1;
@@ -527,66 +106,71 @@ outline-offset: 3px;
   width: 18px;
   height: 18px;
 }
-
-/* Style header saat fullscreen (sudut tidak melengkung) */
-.chat-window.fullscreen .chat-header {
-  border-radius: 0;
-}
-/* --- AKHIR STYLE BARU --- */
-
-
 .chat-header-close {
-  /* (Style ini tetap sama) */
-  background: none;
-  border: none;
-  color: white;
   font-size: 28px;
-  /* ...sisa style Anda... */
 }
 
+/* Body Popup */
 .chat-body {
   flex-grow: 1;
   padding: 10px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Bug fix untuk flexbox */
-  
+  min-height: 0;
+  background-color: var(--col-bg-chat);
 }
 
+/* GEMINI STYLE FOOTER (POPUP) 
+   Mengubah Footer menjadi 'Floating Pill' 
+*/
 .chat-footer {
   display: flex; 
   align-items: center; 
-  padding: 8px 12px; 
-  background-color: #f0f2f5; 
-  border-top: 1px solid #ddd;
   flex-shrink: 0;
+  
+  /* Styling Kapsul Melayang */
+  margin: 10px;               /* Memberi jarak dari tepi (floating) */
+  padding: 5px 8px;           /* Padding dalam kapsul */
+  background-color: var(--col-white);
+  border: 2px solid var(--col-soft-blue); /* Border tebal di container */
+  border-radius: 50px;        /* Bentuk Pill */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Shadow halus */
 }
 
+/* Input Field (Popup) - Borderless & Transparan */
 .chat-input {
   flex-grow: 1; 
-  border: none; 
+  background-color: transparent; 
+  border: none;      /* Hapus border input karena sudah ada di footer */
   outline: none; 
-  padding: 12px 18px; 
-  font-size: 16px;
-  background-color: #ffffff; 
-  border-radius: 25px; 
-  margin-right: 8px; 
+  padding: 10px 12px; 
+  font-size: 15px;
+  color: var(--col-darkest);
+}
+.chat-input::placeholder {
+  color: #94A3B8;
 }
 
 .send-button {
-  background-color: #007bff;
+  background-color: var(--col-navy);
   border: none;
-  color: white;
+  color: var(--col-white);
   border-radius: 50%;
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+.send-button:hover {
+    background-color: var(--col-medium-blue);
 }
 
+/* Pesan Chat */
 .chat-message {
   margin-bottom: 10px;
   padding: 8px 12px;
@@ -595,79 +179,368 @@ outline-offset: 3px;
   word-wrap: break-word;
   line-height: 1.4;
 }
-
 .chat-message.klien {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--col-navy);
+  color: var(--col-white);
   align-self: flex-end;
+  border-bottom-right-radius: 4px;
 }
-
 .chat-message.server {
-  background-color: #e9e9eb;
-  color: black;
+  background-color: var(--col-white);
+  color: var(--col-darkest);
+  border: 1px solid var(--col-soft-blue);
   align-self: flex-start;
+  border-bottom-left-radius: 4px;
 }
 .chat-message.server.typing {
   font-style: italic;
-  color: #777;
+  color: var(--col-soft-blue);
+  background-color: transparent;
+  border: none;
 }
 
-/* Tombol Template & Kuis */
-.quick-reply-container {
-  padding: 5px 10px;
-  display: flex;
-  flex-direction: column; 
-  align-items: flex-start; 
-  margin-left: 40px; 
-  max-width: 85%; 
-  box-sizing: border-box;
+/* ========================================= */
+/* 4. MODE FULLSCREEN                        */
+/* ========================================= */
+.chat-window.fullscreen {
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    border: none; border-radius: 0;
+    box-shadow: none;
+    bottom: auto; right: auto;
+    display: flex; flex-direction: row;
+    background: var(--col-white);
 }
+
+/* Sembunyikan elemen popup di fullscreen */
+.chat-window.fullscreen .chat-header,
+.chat-window.fullscreen .chat-body,
+.chat-window.fullscreen .chat-footer {
+    display: none;
+}
+
+/* Sidebar Fullscreen */
+.chat-window.fullscreen .fs-sidebar {
+    width: 90px;
+    height: 100vh;
+    background-color: var(--col-darkest);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.3s ease-in-out;
+    border-right: 1px solid var(--col-navy);
+}
+
+/* Area Chat Fullscreen */
+.chat-window.fullscreen .fs-chat-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--col-bg-chat); 
+    position: relative;
+}
+
+/* Header Fullscreen */
+.chat-window.fullscreen .fs-header {
+    text-align: center;
+    padding: 20px;
+    color: var(--col-navy);
+    font-weight: 600;
+    border-bottom: 1px solid var(--col-pale-blue);
+    position: relative;
+    flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.chat-window.fullscreen .fs-close {
+    position: absolute;
+    right: 15px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 28px;
+    color: var(--col-medium-blue);
+    background: none; border: none;
+    cursor: pointer; padding: 5px;
+    line-height: 1;
+}
+.chat-window.fullscreen .fs-close:hover { color: var(--col-navy); }
+
+/* Body Fullscreen */
+.chat-window.fullscreen .fs-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 20px;
+    max-width: 1024px; margin: 0 auto; width: 100%;
+    box-sizing: border-box;
+    /* Memberi ruang di bawah agar pesan terakhir tidak tertutup input floating */
+    padding-bottom: 100px; 
+}
+
+/* Container Pesan Fullscreen */
+.chat-window.fullscreen .fs-message {
+    display: flex; align-items: flex-end; gap: 12px;
+    max-width: 80%; margin-bottom: 20px;
+}
+.chat-window.fullscreen .fs-message.user {
+    align-self: flex-end; flex-direction: row; justify-content: flex-end;
+}
+.chat-window.fullscreen .fs-message.buddy {
+    align-self: flex-start; justify-content: flex-start;
+}
+
+/* Avatar Fullscreen */
+.chat-window.fullscreen .fs-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+}
+.chat-window.fullscreen .fs-avatar.user {
+    background-color: var(--col-medium-blue);
+    color: var(--col-white);
+}
+.chat-window.fullscreen .fs-avatar.user svg { width: 24px; height: 24px; fill: currentColor; }
+.chat-window.fullscreen .fs-avatar.user .fs-avatar-tie {
+    width: 8px; height: 12px;
+    background: var(--col-darkest);
+    position: absolute; bottom: 4px;
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+}
+.chat-window.fullscreen .fs-avatar.buddy {
+    background-color: var(--col-pale-blue);
+    color: var(--col-navy);
+}
+.chat-window.fullscreen .fs-avatar.buddy svg { width: 24px; height: 24px; fill: currentColor; }
+
+/* Bubble Chat Fullscreen */
+.chat-window.fullscreen .fs-bubble {
+    padding: 12px 16px; border-radius: 18px;
+    font-size: 15px; line-height: 1.5;
+    word-wrap: break-word; position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.chat-window.fullscreen .fs-message.user .fs-bubble {
+    background-color: var(--col-navy); color: var(--col-white);
+    border-bottom-right-radius: 4px; border-bottom-left-radius: 18px;
+}
+.chat-window.fullscreen .fs-message.buddy .fs-bubble {
+    background-color: var(--col-white); color: var(--col-darkest);
+    border: 1px solid var(--col-soft-blue);
+    border-bottom-left-radius: 4px; border-bottom-right-radius: 18px;
+}
+.chat-window.fullscreen .fs-bubble.typing {
+    font-style: italic; color: var(--col-medium-blue);
+}
+
+/* Quick Replies */
+.quick-reply-container {
+    padding: 5px 10px; display: flex; flex-direction: column; 
+    align-items: flex-start; margin-left: 0; width: 100%;
+    box-sizing: border-box; gap: 8px; margin-top: 10px;
+}
+.chat-window:not(.fullscreen) .quick-reply-container { margin-left: 0; max-width: 100%; }
 
 .quick-reply-button {
-  background-color: #ffffff;
-  border: 1px solid #007bff; 
-  color: #007bff; 
-  border-radius: 20px;
-  padding: 10px 16px; 
-  margin: 4px 0; 
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  width: 100%; 
-  box-sizing: border-box; 
-  text-align: left; 
-  line-height: 1.4; 
+    background-color: var(--col-white);
+    border: 1px solid var(--col-medium-blue);
+    color: var(--col-navy);
+    border-radius: 20px; padding: 10px 16px; 
+    cursor: pointer; font-size: 14px; font-weight: 500;
+    width: 100%; box-sizing: border-box; 
+    text-align: left; transition: all 0.2s;
 }
-
 .quick-reply-button:hover {
-  background-color: #f0f8ff; 
+    background-color: var(--col-pale-blue);
+    border-color: var(--col-navy);
+    transform: translateX(3px);
 }
 
+/* GEMINI STYLE FOOTER (FULLSCREEN) 
+   Floating Pill Style 
+*/
+.chat-window.fullscreen .fs-footer {
+    position: absolute; /* Floating di atas konten */
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%); /* Center Horizontal */
+    
+    width: 90%;
+    max-width: 800px; /* Batasi lebar agar seperti search bar */
+    
+    padding: 8px 16px; /* Padding dalam kapsul */
+    
+    /* Styling Container Input */
+    background-color: var(--col-darkest); /* Background Gelap */
+    border: 2px solid var(--col-soft-blue); /* Stroke Tebal */
+    border-radius: 50px; /* Bentuk Kapsul/Pill */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Shadow Floating */
+    
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    z-index: 100;
+}
 
-
-
-/* --- Styling Dropdown Mode Chat --- */
-.mode-select {
-    padding: 6px 10px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    background-color: white;
-    font-size: 12px;
-    color: #555;
-    cursor: pointer;
+/* Input Fullscreen - Borderless & Menyatu */
+.chat-window.fullscreen .fs-input {
+    flex-grow: 1;
+    background-color: transparent; /* Transparan */
+    border: none; /* Border dipindah ke footer */
+    padding: 10px;
+    font-size: 16px;
+    color: var(--col-white); /* Teks Putih */
     outline: none;
 }
-
-.mode-select:focus {
-    border-color: #007bff;
+.chat-window.fullscreen .fs-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
-/* Khusus Fullscreen: sedikit lebih besar */
+/* Tombol Kirim Fullscreen */
+.chat-window.fullscreen .fs-send-button {
+    background: var(--col-navy); /* Background tombol */
+    border: none;
+    color: var(--col-white);
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%; /* Bulat */
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.chat-window.fullscreen .fs-send-button svg { width: 20px; height: 20px; fill: currentColor; }
+.chat-window.fullscreen .fs-send-button:disabled {
+    background: transparent;
+    color: var(--col-soft-blue);
+    cursor: not-allowed;
+}
+.chat-window.fullscreen .fs-send-button:hover:not(:disabled) {
+    background: var(--col-medium-blue);
+}
+
+
+/* ========================================= */
+/* 5. MODUL KUIS / SIDEBAR EXPANDED          */
+/* ========================================= */
+.chat-window.fullscreen .fs-sidebar.quiz-active {
+    width: 55%; min-width: 400px; max-width: 600px;
+    background-color: var(--col-navy);
+}
+
+.fs-quiz-container {
+    display: flex; flex-direction: column;
+    height: 100%; width: 100%; color: var(--col-white);
+    opacity: 0; transition: opacity 0.2s ease 0.1s; flex-shrink: 0;
+}
+.fs-sidebar.quiz-active .fs-quiz-container { opacity: 1; }
+
+.fs-quiz-header {
+    padding: 24px; flex-shrink: 0;
+    background: var(--col-darkest); position: relative;
+    border-bottom: 1px solid var(--col-medium-blue);
+}
+.fs-quiz-header h4 {
+    font-size: 1.1em; font-weight: 600; margin: 0 0 15px 0;
+    color: var(--col-white); text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.fs-quiz-progress-bar { display: flex; gap: 4px; width: 100%; }
+.fs-quiz-progress-segment {
+    height: 8px; flex-grow: 1;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px; transition: all 0.3s ease;
+}
+.fs-quiz-progress-segment.active { background: var(--col-medium-blue); }
+.fs-quiz-progress-segment.completed { background: var(--col-pale-blue); }
+
+.fs-quiz-counter {
+    position: absolute; top: 24px; right: 24px;
+    color: var(--col-pale-blue); font-size: 0.9em; font-weight: 500;
+}
+
+.fs-quiz-form { flex-grow: 1; overflow-y: auto; padding: 24px; }
+.fs-quiz-desc {
+    font-size: 1.1em; font-weight: 500; margin-bottom: 24px;
+    line-height: 1.5; color: var(--col-pale-blue);
+}
+
+.fs-quiz-options { display: flex; flex-direction: column; gap: 12px; }
+
+/* Opsi Jawaban (Solid Color) */
+.fs-quiz-option-btn {
+    display: block; width: 100%;
+    background-color: var(--col-navy); 
+    border: 1px solid var(--col-soft-blue);
+    color: var(--col-white);
+    padding: 14px 20px; border-radius: 8px;
+    cursor: pointer; font-size: 1em; text-align: left;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.fs-quiz-option-btn:hover {
+    background-color: var(--col-medium-blue);
+    border-color: var(--col-pale-blue);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+}
+.fs-quiz-option-btn span {
+    font-weight: 600; margin-right: 8px; color: var(--col-pale-blue);
+}
+.fs-quiz-option-btn.selected {
+    background-color: var(--col-darkest);
+    border-color: var(--col-pale-blue);
+    box-shadow: 0 0 0 2px var(--col-medium-blue);
+}
+
+.fs-quiz-footer {
+    padding: 20px 24px; border-top: 1px solid var(--col-medium-blue);
+    background: var(--col-darkest); flex-shrink: 0;
+    display: flex; justify-content: space-between;
+}
+.fs-quiz-nav-btn {
+    background: var(--col-medium-blue); color: var(--col-white);
+    border: none; padding: 10px 16px; border-radius: 8px;
+    font-size: 0.9em; font-weight: 600; cursor: pointer;
+    transition: background 0.2s ease;
+}
+.fs-quiz-nav-btn:hover { background: var(--col-soft-blue); }
+.fs-quiz-nav-btn:disabled {
+    background: rgba(255,255,255,0.1); color: var(--col-soft-blue); cursor: not-allowed;
+}
+.fs-quiz-submit {
+    background: var(--col-pale-blue); color: var(--col-navy);
+    border: none; border-radius: 8px; font-size: 0.9em; font-weight: 600;
+    cursor: pointer; padding: 10px 16px; transition: all 0.2s ease;
+}
+.fs-quiz-submit:hover { background: var(--col-white); transform: translateY(-2px); }
+.fs-quiz-submit:disabled {
+    background: var(--col-soft-blue); color: var(--col-darkest);
+    cursor: not-allowed; transform: none;
+}
+
+/* ========================================= */
+/* 6. DROPDOWN MODE CHAT                     */
+/* ========================================= */
+.mode-select {
+    padding: 6px 10px; margin-right: 10px;
+    border: none; /* Borderless di dalam pill */
+    border-radius: 15px;
+    background-color: transparent; /* Transparan agar menyatu */
+    font-size: 12px; color: var(--col-navy);
+    cursor: pointer; outline: none;
+    font-weight: 600;
+}
+/* Dropdown Fullscreen */
 .mode-select.fs-mode {
-    padding: 10px 15px;
-    font-size: 14px;
+    padding: 8px 15px; font-size: 14px;
     border-radius: 20px;
-    background-color: #f9fafb;
-    border-color: #e2e8f0;
+    background-color: rgba(255, 255, 255, 0.1); /* Sedikit terang di bg gelap */
+    border: 1px solid var(--col-soft-blue);
+    color: var(--col-pale-blue);
+}
+.mode-select.fs-mode option {
+    background-color: var(--col-darkest);
+    color: var(--col-white);
 }
