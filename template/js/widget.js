@@ -1,37 +1,37 @@
-(function() {
-    // 1. Konfigurasi
-    const API_BASE_URL = "http://localhost:8000"; // Sesuaikan jika backend di-deploy
-    const WIDGET_CSS_URL = API_BASE_URL + "/widget/style/widget.css"; // Asumsi CSS ada di backend
-    const VUE_CDN_URL = "https://unpkg.com/vue@3/dist/vue.global.js";
+(function () {
+  // 1. Konfigurasi
+  const API_BASE_URL = "http://localhost:8000"; // Sesuaikan jika backend di-deploy
+  const WIDGET_CSS_URL = API_BASE_URL + "/widget/style/widget.css"; // Asumsi CSS ada di backend
+  const VUE_CDN_URL = "https://unpkg.com/vue@3/dist/vue.global.js";
 
-    // 2. Fungsi Pemuat (Loader)
-    function loadScript(src, callback) {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = callback;
-        document.head.appendChild(script);
-    }
-    function loadCSS(href) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = href;
-        document.head.appendChild(link);
-    }
+  // 2. Fungsi Pemuat (Loader)
+  function loadScript(src, callback) {
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = callback;
+    document.head.appendChild(script);
+  }
+  function loadCSS(href) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.appendChild(link);
+  }
 
-    // 3. Mulai Muat Vue
-    loadScript(VUE_CDN_URL, () => {
-        loadCSS(WIDGET_CSS_URL);
-        
-        const appDiv = document.createElement('div');
-        appDiv.id = 'learning-buddy-app';
-        document.body.appendChild(appDiv);
+  // 3. Mulai Muat Vue
+  loadScript(VUE_CDN_URL, () => {
+    loadCSS(WIDGET_CSS_URL);
 
-        // 4. Buat Aplikasi Vue
-        const { createApp } = Vue;
-        
-        createApp({
-            // 5. Template
-            template: `
+    const appDiv = document.createElement("div");
+    appDiv.id = "learning-buddy-app";
+    document.body.appendChild(appDiv);
+
+    // 4. Buat Aplikasi Vue
+    const { createApp } = Vue;
+
+    createApp({
+      // 5. Template
+      template: `
                 <div>
                     <!-- Tombol Chat -->
                     <div>
@@ -212,35 +212,35 @@
                                     <button class="chat-header-close fs-close" @click="closeChat">&times;</button>
                                 </div>
                                 <div class="fs-body" ref="chatBodyFs">
-                                     <div v-for="(msg, index) in messages" :key="index" :class="['fs-message', msg.sender === 'klien' ? 'user' : 'buddy']">
-                                        
-                                        <div v-if="msg.sender === 'server'" class="fs-avatar buddy">
-                                            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path></svg>
-                                        </div>
+     <div v-for="(msg, index) in messages" :key="index" :class="['fs-message', msg.sender === 'klien' ? 'user' : 'buddy']">
+        
+        <div v-if="msg.sender === 'server'" class="fs-avatar buddy">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path></svg>
+        </div>
 
-                                         <div class="fs-bubble">
-                                            <div v-html="formatMessage(msg.text)"></div>
-                                            <div class="quick-reply-container" v-if="msg.options && msg.options.length > 0">
-                                                <button v-for="option in msg.options" :key="option" class="quick-reply-button"
-                                                    @click="sendQuickReply(option)">
-                                                    {{ option }}
-                                                </button>
-                                            </div>
-                                        </div>
+        <div class="fs-bubble">
+            <div v-html="formatMessage(msg.text)"></div>
+            <div class="quick-reply-container" v-if="msg.options && msg.options.length > 0">
+                <button v-for="option in msg.options" :key="option" class="quick-reply-button" @click="sendQuickReply(option)">
+                    {{ option }}
+                </button>
+            </div>
+        </div>
 
-                                        <div v-if="msg.sender === 'klien'" class="fs-avatar user">
-                                            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path></svg>
-                                            <div class="fs-avatar-tie"></div>
-                                        </div>
+        <div v-if="msg.sender === 'klien'" class="fs-avatar user">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path></svg>
+            <div class="fs-avatar-tie"></div>
+        </div>
 
-                                    </div>
-                                    <div v-if="isLoading && !showQuizPanel" class="fs-message buddy">
-                                        <div class="fs-avatar buddy">
-                                            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path></svg>
-                                        </div>
-                                        <div class="fs-bubble typing">...</div>
-                                    </div>
-                                </div>
+    </div>
+
+    <div v-if="isLoading && !showQuizPanel" class="fs-message buddy">
+        <div class="fs-avatar buddy">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path></svg>
+        </div>
+        <div class="fs-bubble typing">...</div>
+    </div>
+</div>
                                 
                                 <div class="fs-footer">
                                     <!-- Dropdown Mode Chat (Fullscreen) -->
@@ -268,414 +268,529 @@
                     </div>
                 </div>
             `,
-            // 6. Data (State Management)
-            data() {
-                return {
-                    windowState: 'closed', 
-                    isLoading: false,
-                    newMessage: '',
-                    messages: [], 
-                    
-                    currentFlow: 'main_menu', 
-                    inputPlaceholder: 'Ketik atau pilih opsi...',
-                    showQuizPanel: false, 
+      // 6. Data (State Management)
+      data() {
+        return {
+          windowState: "closed",
+          isLoading: false,
+          newMessage: "",
+          messages: [],
 
-                    // (BARU) State Mode Chat
-                    chatMode: 'to the point', // Default sesuai backend
+          currentFlow: "main_menu",
+          inputPlaceholder: "Ketik atau pilih opsi...",
+          showQuizPanel: false,
 
-                    quizContext: {
-                        interest: null,
-                        questions: [],
-                        currentQuestionIndex: 0,
-                        userAnswers: {} 
-                    },
-                    isAssessmentMode: false,
-                    assessmentContext: {
-                        questions: [],
-                        currentQuestionIndex: 0,
-                        answers: []
-                    }
-                };
-            },
-            // 7. Computed Properties
-            computed: {
-                activeContext() {
-                    return this.isAssessmentMode ? this.assessmentContext : this.quizContext;
-                },
-                currentQuestion() {
-                    const ctx = this.activeContext;
-                    if (ctx.questions && ctx.questions.length > 0) {
-                        return ctx.questions[ctx.currentQuestionIndex];
-                    }
-                    return null;
-                },
-                currentAnswerSelected() {
-                    if (!this.currentQuestion) return false;
-                    if (this.isAssessmentMode) {
-                        return !!this.assessmentContext.answers[this.assessmentContext.currentQuestionIndex];
-                    } else {
-                        return !!this.quizContext.userAnswers[this.currentQuestion.question_id];
-                    }
-                },
-                allQuestionsAnswered() {
-                    if (this.isAssessmentMode) {
-                        const answered = this.assessmentContext.answers.filter(a => a).length;
-                        return answered === this.assessmentContext.questions.length;
-                    } else {
-                        const answered = Object.keys(this.quizContext.userAnswers).length;
-                        return this.quizContext.questions.length > 0 && answered === this.quizContext.questions.length;
-                    }
-                }
-            },
-            // 8. Methods
-            methods: {
-                scrollToBottom() {
-                    this.$nextTick(() => {
-                        const body = this.$refs.chatBody || this.$refs.chatBodyFs;
-                        if (body) { body.scrollTop = body.scrollHeight; }
-                    });
-                },
-                formatMessage(text) {
-                    return String(text).replace(/\n/g, '<br>');
-                },
-                removeLastOptions() {
-                    for (let i = this.messages.length - 1; i >= 0; i--) {
-                        if (this.messages[i].sender === 'server') {
-                            if (this.messages[i].options) {
-                                this.messages[i].options = null;
-                            }
-                            break; 
-                        }
-                    }
-                },
-                togglePopup() {
-                    if (this.windowState === 'closed') {
-                        this.windowState = 'popup';
-                        if (this.messages.length === 0) {
-                            this.showInitialTemplates();
-                        }
-                    } else {
-                        this.windowState = 'closed';
-                    }
-                },
-                goFullscreen() { this.windowState = 'fullscreen'; },
-                closeChat() { this.windowState = 'closed'; },
+          // (BARU) State Mode Chat
+          chatMode: "to the point", // Default sesuai backend
 
-                showInitialTemplates() {
-                    this.messages.push({
-                        sender: 'server',
-                        text: "Halo! Saya Learning Buddy. Anda bisa pilih salah satu opsi di bawah ini:",
-                        options: ["Cek Minat Belajar", "Cek Progres", "Rekomendasi Kuis", "Tanya Soal"] 
-                    });
-                    this.currentFlow = 'main_menu'; 
-                    this.inputPlaceholder = 'Ketik atau pilih opsi...';
-                    this.scrollToBottom();
-                },
-                resetQuizContext() {
-                    this.quizContext = {
-                        interest: null,
-                        questions: [],
-                        currentQuestionIndex: 0,
-                        userAnswers: {}
-                    };
-                    this.showQuizPanel = false;
-                },
-                
-                sendQuickReply(text) {
-                    this.messages.push({ sender: 'klien', text: text });
-                    this.scrollToBottom();
-                    this.removeLastOptions();
-                    this.handleMessage(text);
-                },
-                sendMessage() {
-                    const msgText = this.newMessage.trim();
-                    if (msgText === '' || this.isLoading) return;
-
-                    this.messages.push({ sender: 'klien', text: msgText });
-                    this.newMessage = '';
-                    this.scrollToBottom();
-                    this.handleMessage(msgText);
-                },
-
-                async handleMessage(msgText) {
-                    this.isLoading = true;
-                    this.removeLastOptions();
-                    const msgLower = msgText.toLowerCase();
-                    
-                    try {
-                        switch (this.currentFlow) {
-                            case 'awaiting_email':
-                                await this.callProgressApi(msgText);
-                                break;
-                            case 'awaiting_question':
-                                await this.callAskApi(msgText);
-                                break;
-                            case 'recommend_await_interest':
-                                this.quizContext.interest = msgText;
-                                await this.callGetQuizApi();
-                                break;
-                            case 'main_menu':
-                            default:
-                                if (msgLower.includes("cek progres")) {
-                                    this.messages.push({ sender: 'server', text: 'Tentu, silakan masukkan email Anda:' });
-                                    this.currentFlow = 'awaiting_email';
-                                    this.inputPlaceholder = 'Ketik email Anda...';
-                                } else if (msgLower.includes("rekomendasi kuis")) {
-                                    await this.startQuizFlow();
-                                } else if (msgLower.includes("cek minat") || msgLower.includes("minat belajar")) {
-                                     await this.startAssessmentFlow();
-                                } else if (msgLower.includes("tanya") || msgLower.includes("soal")) {
-                                    this.messages.push({ sender: 'server', text: 'Silakan ketik pertanyaan Anda:' });
-                                    this.currentFlow = 'awaiting_question';
-                                    this.inputPlaceholder = 'Ketik pertanyaan Anda...';
-                                } else {
-                                    await this.callAskApi(msgText);
-                                }
-                                break;
-                        }
-                    } catch (error) {
-                        console.error("Error in handleMessage:", error);
-                        this.messages.push({ sender: 'server', text: `Maaf, terjadi kesalahan: ${error.message}` });
-                    } finally {
-                        this.isLoading = false;
-                        this.scrollToBottom();
-                        if (this.currentFlow === 'main_menu' && !this.isLoading) {
-                           const lastMsg = this.messages[this.messages.length - 1];
-                           if (!lastMsg.options) {
-                               this.showInitialTemplates();
-                           }
-                        }
-                    }
-                },
-
-                async callProgressApi(email) {
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/api/v1/progress`, { 
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: email })
-                        });
-                        if (!response.ok) {
-                            const errData = await response.json();
-                            throw new Error(errData.detail || `Email tidak ditemukan`);
-                        }
-                        const data = await response.json();
-                        this.messages.push({ sender: "server", text: data.bot_response });
-                    } catch (error) {
-                        console.error("Error di callProgressApi:", error);
-                        this.messages.push({ sender: "server", text: `Maaf, terjadi kesalahan: ${error.message}` });
-                    } finally {
-                        this.currentFlow = "main_menu"; 
-                        this.inputPlaceholder = 'Ketik atau pilih opsi...';
-                    }
-                },
-
-                // FITUR 2: Tanya Soal (Updated dengan chatMode)
-                async callAskApi(question) {
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/api/v1/ask`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ 
-                                question: question,
-                                preset: this.chatMode // <-- GUNAKAN NILAI DARI DROPDOWN
-                            }) 
-                        });
-                        if (!response.ok) throw new Error('API /ask gagal');
-                        
-                        const data = await response.json();
-                        this.messages.push({ sender: 'server', text: data.bot_response });
-                    } catch (error) {
-                         console.error("Error di callAskApi:", error);
-                        this.messages.push({ sender: "server", text: `Maaf, terjadi kesalahan: ${error.message}` });
-                    } finally {
-                        this.currentFlow = 'main_menu'; 
-                        this.inputPlaceholder = 'Ketik atau pilih opsi...'; 
-                    }
-                },
-
-                async startQuizFlow() {
-                    this.resetQuizContext();
-                    const response = await fetch(`${API_BASE_URL}/api/v1/recommend/interests`);
-                    if (!response.ok) throw new Error(`API /recommend/interests gagal`);
-                    
-                    const data = await response.json();
-                    const interests = data.map(item => item.name);
-
-                    this.messages.push({
-                        sender: 'server',
-                        text: 'Tentu! Silakan pilih minat Anda:',
-                        options: interests
-                    });
-                    this.currentFlow = 'recommend_await_interest';
-                },
-
-                async callGetQuizApi() {
-                    this.isLoading = true;
-                    this.messages.push({ sender: 'server', text: 'Mempersiapkan kuis campuran untuk Anda...' });
-                    this.scrollToBottom();
-
-                    const params = new URLSearchParams({
-                        kategori_minat: this.quizContext.interest,
-                    });
-
-                    const response = await fetch(`${API_BASE_URL}/api/v1/recommend/quiz?${params}`);
-                    
-                    this.isLoading = false;
-                    this.removeLastOptions();
-
-                    if (!response.ok) {
-                        const errData = await response.json();
-                        this.messages.push({ sender: 'server', text: `Maaf, gagal memuat kuis: ${errData.detail}` });
-                        this.scrollToBottom();
-                        this.currentFlow = 'main_menu';
-                        this.showInitialTemplates();
-                        return;
-                    }
-                    
-                    const data = await response.json();
-                    this.quizContext.questions = data;
-                    this.quizContext.currentQuestionIndex = 0;
-                    this.quizContext.answers = [];
-
-                    if (this.quizContext.questions.length > 0) {
-                        this.showQuizPanel = true;
-                        this.goFullscreen();
-                        this.currentFlow = 'recommend_await_quiz_answer'; 
-                    } else {
-                        this.messages.push({ sender: 'server', text: 'Tidak ada pertanyaan kuis yang ditemukan untuk minat tersebut.' });
-                        this.currentFlow = 'main_menu';
-                        this.showInitialTemplates();
-                    }
-                    this.scrollToBottom();
-                },
-
-                async submitFullQuiz() {
-                    this.isLoading = true; 
-                    if (!this.allQuestionsAnswered) {
-                         alert("Harap jawab semua pertanyaan kuis sebelum mengirim.");
-                         this.isLoading = false;
-                         return;
-                    }
-                    const formattedAnswers = Object.entries(this.quizContext.userAnswers).map(([q_id, answer_text]) => {
-                        return {
-                            question_id: parseInt(q_id),
-                            selected_answer: answer_text
-                        };
-                    });
-                    this.quizContext.answers = formattedAnswers;
-                    this.messages.push({ sender: 'klien', text: 'Kuis saya sudah selesai, ini jawabannya.' });
-                    this.scrollToBottom();
-                    await this.callSubmitQuizApi(); 
-                },
-
-                async callSubmitQuizApi() {
-                    const body = {
-                        kategori_minat: this.quizContext.interest,
-                        answers: this.quizContext.answers
-                    };
-                    const response = await fetch(`${API_BASE_URL}/api/v1/recommend/submit`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(body)
-                    });
-                    
-                    this.showQuizPanel = false;
-                    this.isLoading = false;
-
-                    if (!response.ok) {
-                        const errData = await response.json();
-                        this.messages.push({ sender: 'server', text: `Maaf, gagal mengirim kuis: ${errData.detail}` });
-                        this.scrollToBottom();
-                        this.currentFlow = 'main_menu';
-                        this.resetQuizContext();
-                        this.showInitialTemplates();
-                        return;
-                    }
-
-                    const data = await response.json();
-                    this.messages.push({ sender: 'server', text: data.bot_response });
-                    this.messages.push({ sender: 'server', text: `Rekomendasi kursus untukmu: **${data.suggested_course_name}**` });
-                    this.currentFlow = 'main_menu';
-                    this.resetQuizContext();
-                    this.scrollToBottom();
-                    this.showInitialTemplates();
-                },
-                
-                async startAssessmentFlow() {
-                    this.isAssessmentMode = true;
-                    this.isLoading = true;
-                    this.goFullscreen();
-                    try {
-                        const response = await fetch(`${API_BASE_URL}/api/v1/assessment/questions`);
-                        const data = await response.json();
-                        if (!data || data.length === 0) throw new Error("Data asesmen kosong");
-                        this.assessmentContext = {
-                            questions: data,
-                            currentQuestionIndex: 0,
-                            answers: new Array(data.length).fill(null)
-                        };
-                        this.showQuizPanel = true; 
-                    } catch (error) {
-                        console.error(error);
-                        this.messages.push({ sender: 'server', text: "Gagal memuat asesmen." });
-                        this.closeChat();
-                    } finally {
-                        this.isLoading = false;
-                    }
-                },
-
-                selectAssessmentAnswer(categoryValue) {
-                    const idx = this.assessmentContext.currentQuestionIndex;
-                    this.assessmentContext.answers[idx] = categoryValue;
-                },
-
-                async submitAssessment() {
-                    this.isLoading = true;
-                    try {
-                        const validAnswers = this.assessmentContext.answers.filter(a => a);
-                        const response = await fetch(`${API_BASE_URL}/api/v1/assessment/submit`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ answers: validAnswers })
-                        });
-                        const result = await response.json();
-                        
-                        this.showQuizPanel = false;
-                        this.isAssessmentMode = false; 
-                        this.messages.push({ sender: 'klien', text: "Saya sudah selesai tes minat." });
-                        this.messages.push({ 
-                            sender: 'server', 
-                            text: `Berdasarkan jawabanmu, jalur yang paling cocok adalah: **${result.recommended_path}**\n\n${result.description}` 
-                        });
-                        this.currentFlow = 'main_menu';
-                        this.showInitialTemplates();
-                    } catch (error) {
-                        this.messages.push({ sender: 'server', text: "Gagal memproses hasil." });
-                    } finally {
-                        this.isLoading = false;
-                        this.scrollToBottom();
-                    }
-                },
-
-                selectAnswer(optionText) {
-                    if (!this.currentQuestion) return;
-                    this.quizContext.userAnswers[this.currentQuestion.question_id] = optionText;
-                },
-
-                goToNext() {
-                    const ctx = this.activeContext;
-                    if (ctx.currentQuestionIndex < ctx.questions.length - 1) {
-                        ctx.currentQuestionIndex++;
-                    }
-                },
-                goToPrev() {
-                    const ctx = this.activeContext;
-                    if (ctx.currentQuestionIndex > 0) {
-                        ctx.currentQuestionIndex--;
-                    }
-                },
+          quizContext: {
+            interest: null,
+            questions: [],
+            currentQuestionIndex: 0,
+            userAnswers: {},
+          },
+          isAssessmentMode: false,
+          assessmentContext: {
+            questions: [],
+            currentQuestionIndex: 0,
+            answers: [],
+          },
+        };
+      },
+      // 7. Computed Properties
+      computed: {
+        activeContext() {
+          return this.isAssessmentMode
+            ? this.assessmentContext
+            : this.quizContext;
+        },
+        currentQuestion() {
+          const ctx = this.activeContext;
+          if (ctx.questions && ctx.questions.length > 0) {
+            return ctx.questions[ctx.currentQuestionIndex];
+          }
+          return null;
+        },
+        currentAnswerSelected() {
+          if (!this.currentQuestion) return false;
+          if (this.isAssessmentMode) {
+            return !!this.assessmentContext.answers[
+              this.assessmentContext.currentQuestionIndex
+            ];
+          } else {
+            return !!this.quizContext.userAnswers[
+              this.currentQuestion.question_id
+            ];
+          }
+        },
+        allQuestionsAnswered() {
+          if (this.isAssessmentMode) {
+            const answered = this.assessmentContext.answers.filter(
+              (a) => a
+            ).length;
+            return answered === this.assessmentContext.questions.length;
+          } else {
+            const answered = Object.keys(this.quizContext.userAnswers).length;
+            return (
+              this.quizContext.questions.length > 0 &&
+              answered === this.quizContext.questions.length
+            );
+          }
+        },
+      },
+      // 8. Methods
+      methods: {
+        scrollToBottom() {
+          this.$nextTick(() => {
+            const body = this.$refs.chatBody || this.$refs.chatBodyFs;
+            if (body) {
+              body.scrollTop = body.scrollHeight;
             }
-        }).mount('#learning-buddy-app');
-    });
+          });
+        },
+        formatMessage(text) {
+          let formatted = String(text);
+          formatted = formatted.replace(
+            /^### (.*$)/gim,
+            '<h3 style="margin: 12px 0 6px 0; font-size: 15px; font-weight: 700;">$1</h3>'
+          );
+
+          formatted = formatted.replace(
+            /^## (.*$)/gim,
+            '<h2 style="margin: 14px 0 8px 0; font-size: 16px; font-weight: 700;">$1</h2>'
+          );
+
+          formatted = formatted.replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+          );
+
+          formatted = formatted.replace(
+            /^\s*[\-\*]\s+(.*)$/gm,
+            '<div style="display: flex; align-items: flex-start; margin-left: 8px; margin-bottom: 4px;"><span style="margin-right:6px;">•</span><span>$1</span></div>'
+          );
+          formatted = formatted.replace(
+            /(?<!\w)\*([^\*\n]+)\*(?!\w)/g,
+            "<em>$1</em>"
+          );
+
+          formatted = formatted.replace(/\n/g, "<br>");
+
+          return formatted;
+        },
+        removeLastOptions() {
+          for (let i = this.messages.length - 1; i >= 0; i--) {
+            if (this.messages[i].sender === "server") {
+              if (this.messages[i].options) {
+                this.messages[i].options = null;
+              }
+              break;
+            }
+          }
+        },
+        togglePopup() {
+          if (this.windowState === "closed") {
+            this.windowState = "popup";
+            if (this.messages.length === 0) {
+              this.showInitialTemplates();
+            }
+          } else {
+            this.windowState = "closed";
+          }
+        },
+        goFullscreen() {
+          this.windowState = "fullscreen";
+        },
+        closeChat() {
+          this.windowState = "closed";
+        },
+
+        showInitialTemplates() {
+          this.messages.push({
+            sender: "server",
+            text: "Halo! Saya Learning Buddy. Anda bisa pilih salah satu opsi di bawah ini:",
+            options: [
+              "Cek Minat Belajar",
+              "Cek Progres",
+              "Rekomendasi Kuis",
+              "Tanya Soal",
+            ],
+          });
+          this.currentFlow = "main_menu";
+          this.inputPlaceholder = "Ketik atau pilih opsi...";
+          this.scrollToBottom();
+        },
+        resetQuizContext() {
+          this.quizContext = {
+            interest: null,
+            questions: [],
+            currentQuestionIndex: 0,
+            userAnswers: {},
+          };
+          this.showQuizPanel = false;
+        },
+
+        sendQuickReply(text) {
+          this.messages.push({ sender: "klien", text: text });
+          this.scrollToBottom();
+          this.removeLastOptions();
+          this.handleMessage(text);
+        },
+        sendMessage() {
+          const msgText = this.newMessage.trim();
+          if (msgText === "" || this.isLoading) return;
+
+          this.messages.push({ sender: "klien", text: msgText });
+          this.newMessage = "";
+          this.scrollToBottom();
+          this.handleMessage(msgText);
+        },
+
+        async handleMessage(msgText) {
+          this.isLoading = true;
+          this.removeLastOptions();
+          const msgLower = msgText.toLowerCase();
+
+          try {
+            switch (this.currentFlow) {
+              case "awaiting_email":
+                await this.callProgressApi(msgText);
+                break;
+              case "awaiting_question":
+                await this.callAskApi(msgText);
+                break;
+              case "recommend_await_interest":
+                this.quizContext.interest = msgText;
+                await this.callGetQuizApi();
+                break;
+              case "main_menu":
+              default:
+                if (msgLower.includes("cek progres")) {
+                  this.messages.push({
+                    sender: "server",
+                    text: "Tentu, silakan masukkan email Anda:",
+                  });
+                  this.currentFlow = "awaiting_email";
+                  this.inputPlaceholder = "Ketik email Anda...";
+                } else if (msgLower.includes("rekomendasi kuis")) {
+                  await this.startQuizFlow();
+                } else if (
+                  msgLower.includes("cek minat") ||
+                  msgLower.includes("minat belajar")
+                ) {
+                  await this.startAssessmentFlow();
+                } else if (
+                  msgLower.includes("tanya") ||
+                  msgLower.includes("soal")
+                ) {
+                  this.messages.push({
+                    sender: "server",
+                    text: "Silakan ketik pertanyaan Anda:",
+                  });
+                  this.currentFlow = "awaiting_question";
+                  this.inputPlaceholder = "Ketik pertanyaan Anda...";
+                } else {
+                  await this.callAskApi(msgText);
+                }
+                break;
+            }
+          } catch (error) {
+            console.error("Error in handleMessage:", error);
+            this.messages.push({
+              sender: "server",
+              text: `Maaf, terjadi kesalahan: ${error.message}`,
+            });
+          } finally {
+            this.isLoading = false;
+            this.scrollToBottom();
+            if (this.currentFlow === "main_menu" && !this.isLoading) {
+              const lastMsg = this.messages[this.messages.length - 1];
+              if (!lastMsg.options) {
+                this.showInitialTemplates();
+              }
+            }
+          }
+        },
+
+        async callProgressApi(email) {
+          try {
+            const response = await fetch(`${API_BASE_URL}/api/v1/progress`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: email }),
+            });
+            if (!response.ok) {
+              const errData = await response.json();
+              throw new Error(errData.detail || `Email tidak ditemukan`);
+            }
+            const data = await response.json();
+            this.messages.push({ sender: "server", text: data.bot_response });
+          } catch (error) {
+            console.error("Error di callProgressApi:", error);
+            this.messages.push({
+              sender: "server",
+              text: `Maaf, terjadi kesalahan: ${error.message}`,
+            });
+          } finally {
+            this.currentFlow = "main_menu";
+            this.inputPlaceholder = "Ketik atau pilih opsi...";
+          }
+        },
+
+        // FITUR 2: Tanya Soal (Updated dengan chatMode)
+        async callAskApi(question) {
+          try {
+            const response = await fetch(`${API_BASE_URL}/api/v1/ask`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                question: question,
+                preset: this.chatMode, // <-- GUNAKAN NILAI DARI DROPDOWN
+              }),
+            });
+            if (!response.ok) throw new Error("API /ask gagal");
+
+            const data = await response.json();
+            this.messages.push({ sender: "server", text: data.bot_response });
+          } catch (error) {
+            console.error("Error di callAskApi:", error);
+            this.messages.push({
+              sender: "server",
+              text: `Maaf, terjadi kesalahan: ${error.message}`,
+            });
+          } finally {
+            this.currentFlow = "main_menu";
+            this.inputPlaceholder = "Ketik atau pilih opsi...";
+          }
+        },
+
+        async startQuizFlow() {
+          this.resetQuizContext();
+          const response = await fetch(
+            `${API_BASE_URL}/api/v1/recommend/interests`
+          );
+          if (!response.ok) throw new Error(`API /recommend/interests gagal`);
+
+          const data = await response.json();
+          const interests = data.map((item) => item.name);
+
+          this.messages.push({
+            sender: "server",
+            text: "Tentu! Silakan pilih minat Anda:",
+            options: interests,
+          });
+          this.currentFlow = "recommend_await_interest";
+        },
+
+        async callGetQuizApi() {
+          this.isLoading = true;
+          this.messages.push({
+            sender: "server",
+            text: "Mempersiapkan kuis campuran untuk Anda...",
+          });
+          this.scrollToBottom();
+
+          const params = new URLSearchParams({
+            kategori_minat: this.quizContext.interest,
+          });
+
+          const response = await fetch(
+            `${API_BASE_URL}/api/v1/recommend/quiz?${params}`
+          );
+
+          this.isLoading = false;
+          this.removeLastOptions();
+
+          if (!response.ok) {
+            const errData = await response.json();
+            this.messages.push({
+              sender: "server",
+              text: `Maaf, gagal memuat kuis: ${errData.detail}`,
+            });
+            this.scrollToBottom();
+            this.currentFlow = "main_menu";
+            this.showInitialTemplates();
+            return;
+          }
+
+          const data = await response.json();
+          this.quizContext.questions = data;
+          this.quizContext.currentQuestionIndex = 0;
+          this.quizContext.answers = [];
+
+          if (this.quizContext.questions.length > 0) {
+            this.showQuizPanel = true;
+            this.goFullscreen();
+            this.currentFlow = "recommend_await_quiz_answer";
+          } else {
+            this.messages.push({
+              sender: "server",
+              text: "Tidak ada pertanyaan kuis yang ditemukan untuk minat tersebut.",
+            });
+            this.currentFlow = "main_menu";
+            this.showInitialTemplates();
+          }
+          this.scrollToBottom();
+        },
+
+        async submitFullQuiz() {
+          this.isLoading = true;
+          if (!this.allQuestionsAnswered) {
+            alert("Harap jawab semua pertanyaan kuis sebelum mengirim.");
+            this.isLoading = false;
+            return;
+          }
+          const formattedAnswers = Object.entries(
+            this.quizContext.userAnswers
+          ).map(([q_id, answer_text]) => {
+            return {
+              question_id: parseInt(q_id),
+              selected_answer: answer_text,
+            };
+          });
+          this.quizContext.answers = formattedAnswers;
+          this.messages.push({
+            sender: "klien",
+            text: "Kuis saya sudah selesai, ini jawabannya.",
+          });
+          this.scrollToBottom();
+          await this.callSubmitQuizApi();
+        },
+
+        async callSubmitQuizApi() {
+          const body = {
+            kategori_minat: this.quizContext.interest,
+            answers: this.quizContext.answers,
+          };
+          const response = await fetch(
+            `${API_BASE_URL}/api/v1/recommend/submit`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(body),
+            }
+          );
+
+          this.showQuizPanel = false;
+          this.isLoading = false;
+
+          if (!response.ok) {
+            const errData = await response.json();
+            this.messages.push({
+              sender: "server",
+              text: `Maaf, gagal mengirim kuis: ${errData.detail}`,
+            });
+            this.scrollToBottom();
+            this.currentFlow = "main_menu";
+            this.resetQuizContext();
+            this.showInitialTemplates();
+            return;
+          }
+
+          const data = await response.json();
+          this.messages.push({ sender: "server", text: data.bot_response });
+          this.messages.push({
+            sender: "server",
+            text: `Rekomendasi kursus untukmu: **${data.suggested_course_name}**`,
+          });
+          this.currentFlow = "main_menu";
+          this.resetQuizContext();
+          this.scrollToBottom();
+          this.showInitialTemplates();
+        },
+
+        async startAssessmentFlow() {
+          this.isAssessmentMode = true;
+          this.isLoading = true;
+          this.goFullscreen();
+          try {
+            const response = await fetch(
+              `${API_BASE_URL}/api/v1/assessment/questions`
+            );
+            const data = await response.json();
+            if (!data || data.length === 0)
+              throw new Error("Data asesmen kosong");
+            this.assessmentContext = {
+              questions: data,
+              currentQuestionIndex: 0,
+              answers: new Array(data.length).fill(null),
+            };
+            this.showQuizPanel = true;
+          } catch (error) {
+            console.error(error);
+            this.messages.push({
+              sender: "server",
+              text: "Gagal memuat asesmen.",
+            });
+            this.closeChat();
+          } finally {
+            this.isLoading = false;
+          }
+        },
+
+        selectAssessmentAnswer(categoryValue) {
+          const idx = this.assessmentContext.currentQuestionIndex;
+          this.assessmentContext.answers[idx] = categoryValue;
+        },
+
+        async submitAssessment() {
+          this.isLoading = true;
+          try {
+            const validAnswers = this.assessmentContext.answers.filter(
+              (a) => a
+            );
+            const response = await fetch(
+              `${API_BASE_URL}/api/v1/assessment/submit`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ answers: validAnswers }),
+              }
+            );
+            const result = await response.json();
+
+            this.showQuizPanel = false;
+            this.isAssessmentMode = false;
+            this.messages.push({
+              sender: "klien",
+              text: "Saya sudah selesai tes minat.",
+            });
+            this.messages.push({
+              sender: "server",
+              text: `Berdasarkan jawabanmu, jalur yang paling cocok adalah: **${result.recommended_path}**\n\n${result.description}`,
+            });
+            this.currentFlow = "main_menu";
+            this.showInitialTemplates();
+          } catch (error) {
+            this.messages.push({
+              sender: "server",
+              text: "Gagal memproses hasil.",
+            });
+          } finally {
+            this.isLoading = false;
+            this.scrollToBottom();
+          }
+        },
+
+        selectAnswer(optionText) {
+          if (!this.currentQuestion) return;
+          this.quizContext.userAnswers[this.currentQuestion.question_id] =
+            optionText;
+        },
+
+        goToNext() {
+          const ctx = this.activeContext;
+          if (ctx.currentQuestionIndex < ctx.questions.length - 1) {
+            ctx.currentQuestionIndex++;
+          }
+        },
+        goToPrev() {
+          const ctx = this.activeContext;
+          if (ctx.currentQuestionIndex > 0) {
+            ctx.currentQuestionIndex--;
+          }
+        },
+      },
+    }).mount("#learning-buddy-app");
+  });
 })();

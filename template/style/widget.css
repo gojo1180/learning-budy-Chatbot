@@ -151,20 +151,23 @@ outline-offset: 3px;
 /* Container Pesan Fullscreen */
 .chat-window.fullscreen .fs-message {
     display: flex;
-    align-items: flex-end; /* Avatar & bubble align bottom */
+    align-items: flex-end; /* PENTING: Avatar sejajar dengan Bawah Bubble */
     gap: 12px; /* Jarak avatar & bubble */
     max-width: 80%;
+    margin-bottom: 20px; /* Jarak antar pesan */
 }
 
 /* Pesan User (Kanan) */
 .chat-window.fullscreen .fs-message.user {
     align-self: flex-end;
-    flex-direction: row-reverse; /* Balik urutan (bubble, lalu avatar) */
+    flex-direction: row; /* Pastikan urutan normal, kita atur via HTML structure */
+    justify-content: flex-end; /* Rata kanan */
 }
 
 /* Pesan Buddy (Kiri) */
 .chat-window.fullscreen .fs-message.buddy {
     align-self: flex-start;
+    justify-content: flex-start;
 }
 
 /* Avatar Fullscreen */
@@ -219,19 +222,24 @@ outline-offset: 3px;
     font-size: 15px;
     line-height: 1.5;
     word-wrap: break-word;
+    position: relative;
 }
 
 .chat-window.fullscreen .fs-message.user .fs-bubble {
     background-color: #0F172A; /* Biru gelap */
     color: white;
-    border-bottom-right-radius: 4px; /* Sudut lancip */
+    /* Sudut kanan bawah lancip (dekat avatar) */
+    border-bottom-right-radius: 4px; 
+    border-bottom-left-radius: 18px;
 }
 
+/* Warna & Bentuk Bubble Bot */
 .chat-window.fullscreen .fs-message.buddy .fs-bubble {
-    background-color: #FFFFFF; /* Putih */
+    background-color: #FFFFFF; 
     color: #0F172A;
     border: 1px solid #E2E8F0;
-    border-bottom-left-radius: 4px; /* Sudut lancip */
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 18px;
 }
 .chat-window.fullscreen .fs-bubble.typing {
     font-style: italic;
@@ -634,6 +642,9 @@ outline-offset: 3px;
 .quick-reply-button:hover {
   background-color: #f0f8ff; 
 }
+
+
+
 
 /* --- Styling Dropdown Mode Chat --- */
 .mode-select {
