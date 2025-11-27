@@ -3,17 +3,11 @@ from schemas.chat import AskRequest, AskResponse
 from services.gemini import call_gemini_api
 from services.supabase import call_supabase_api
 
-# Buat router khusus untuk endpoint 'ask'
 router = APIRouter()
 
 @router.post("/ask", response_model=AskResponse)
 async def handle_ask(request: AskRequest):
-    """
-    FITUR 2 (UPDATED): Menjawab pertanyaan teknis dengan Hybrid Context.
-    Prioritas Konteks:
-    1. Konteks Halaman Web (Full + Visible Text) yang dikirim frontend.
-    2. Jika tidak ada, fallback ke RAG Database (Supabase).
-    """
+ 
     
     konteks_str = ""
     sumber_konteks = ""
@@ -22,16 +16,12 @@ async def handle_ask(request: AskRequest):
     # Jika frontend mengirim konten halaman, gunakan itu.
     if request.full_page_content:
         sumber_konteks = "Halaman Web yang Sedang Dibuka User"
-        
-        # Susun string konteks yang rapi
         konteks_str = f"""
         KONTEKS HALAMAN (MODUL BELAJAR):
         ================================
         {request.full_page_content[:20000]} # Batasi 20rb karakter agar aman
         ================================
         """
-
-        # Tambahkan fokus user (viewport) jika ada
         if request.visible_text:
             konteks_str += f"""
             
@@ -73,6 +63,7 @@ async def handle_ask(request: AskRequest):
         prompt_nada = (
             "Jawab dengan gaya santai dan akrab, seperti teman yang membantu belajar dengan menggunakan analogi agar lebih mudah dipahami. "
             "Gunakan bahasa yang ringan, hangat, dan relatable."
+            "gunakan analogi dan contoh sehari-hari."
         )
     elif request.preset == "instruktor":
         prompt_nada = (
@@ -83,13 +74,13 @@ async def handle_ask(request: AskRequest):
         prompt_nada = (
             "Jawab dengan nada seperti rekan satu tim. "
             "Gunakan bahasa kolaboratif dan suportif."
+            "bantu permaslahan dan projek user seolah-olah kalian bekerja bersama dalam satu tim."
         )
     else: 
         prompt_nada = (
             "Jawab secara ringkas, jelas, dan langsung ke inti permasalahan (to the point)."
         )
 
-    # --- FINAL PROMPT ---
     prompt_final = f"""
     Anda adalah Asisten Pengajar yang cerdas.
     

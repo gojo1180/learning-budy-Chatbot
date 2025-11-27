@@ -4,11 +4,9 @@ from services.gemini import call_gemini_api
 from services.supabase import call_supabase_api
 import json
 
-# Buat router khusus untuk endpoint 'progress'
+
 router = APIRouter(prefix="/progress", tags=["Progres Siswa"])
 
-# Catatan: path di sini adalah "/", karena prefix "/progress"
-# sudah ditambahkan di api/router.py
 @router.post("/", response_model=ProgressResponse)
 async def handle_progress(request: ProgressRequest):
     """
@@ -16,11 +14,9 @@ async def handle_progress(request: ProgressRequest):
     Mengambil data dari Mock Server berdasarkan email.
     """
     
-    # 1. Panggil Supabase (Mock Server) untuk mendapatkan data progres
-    #    berdasarkan file 'Student Progress.csv' Anda.
     data_progres_list = await call_supabase_api(
-        "Student Progress",  # <-- Nama tabel dari CSV Anda (dikonfirmasi oleh screenshot Anda)
-        db_type="mock",      # <-- PENTING: Kita panggil MOCK API Anda
+        "Student Progress", 
+        db_type="mock",      
         params={
             "email": f"eq.{request.email}",
             "select": "*"                  
@@ -28,13 +24,9 @@ async def handle_progress(request: ProgressRequest):
     )
     
     if not data_progres_list:
-        # Jika Supabase mengembalikan list kosong []
         return ProgressResponse(bot_response=f"Maaf, saya tidak dapat menemukan data progres untuk email {request.email}. Pastikan emailnya ada di database mock Anda.")
-
-    # 2. Ubah data list (JSON) menjadi string agar bisa dimasukkan ke prompt
     data_progres_str = json.dumps(data_progres_list)
     
-    # 3. Buat prompt untuk Gemini
     prompt = f"""
     Anda adalah seorang mentor yang ramah dan suportif.
     Ini adalah data progres seorang siswa dalam format JSON (dia mungkin mengambil beberapa kursus):
@@ -55,7 +47,6 @@ async def handle_progress(request: ProgressRequest):
     "Kerja bagus, Sari! Di kelas 'Belajar Fundamental Aplikasi Android', kamu sudah menyelesaikan 100% materi (214 dari 214 modul) dan lulus dengan nilai ujian 100! Luar biasa!"
     """
     
-    # 4. Panggil Gemini untuk merangkum data
     jawaban_ai = await call_gemini_api(prompt)
     
     return ProgressResponse(bot_response=jawaban_ai)

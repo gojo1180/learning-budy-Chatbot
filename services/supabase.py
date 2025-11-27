@@ -23,32 +23,29 @@ CLIENT_CONFIGS = {
 
 async def call_supabase_api(
     endpoint: str, 
-    db_type: Literal["dicoding", "mock"] = "dicoding", # <-- Parameter baru
+    db_type: Literal["dicoding", "mock"] = "dicoding", 
     params: Optional[Dict[str, Any]] = None
 ) -> Optional[List[Dict[str, Any]]]:
-    """
-    Memanggil Supabase REST API secara asinkron.
-    Sekarang bisa memilih antara database 'dicoding' atau 'mock'.
-    """
     
-    # Pilih konfigurasi berdasarkan db_type
+    
+
     config = CLIENT_CONFIGS.get(db_type)
     if not config:
         print(f"Error: Konfigurasi db_type '{db_type}' tidak ditemukan.")
         return None
         
-    # Menggunakan httpx.AsyncClient untuk pemanggilan I/O non-blocking
+
     async with httpx.AsyncClient() as client:
         try:
             url = f"{config['base_url']}/{endpoint}"
-            print(f"[DEBUG] Memanggil API: {url}") # Log untuk debug
+            print(f"[DEBUG] Memanggil API: {url}") 
             
             response = await client.get(
                 url,
                 headers=config['headers'],
                 params=params
             )
-            response.raise_for_status() # Otomatis raise error jika status 4xx atau 5xx
+            response.raise_for_status() 
             return response.json()
         
         except httpx.HTTPStatusError as e:
@@ -58,4 +55,4 @@ async def call_supabase_api(
             print(f"Error tidak terduga saat memanggil Supabase: {e}")
             return None
 
-# Kita perlu menambahkan Literal di sini juga
+

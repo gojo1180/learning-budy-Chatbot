@@ -9,12 +9,9 @@ from services.supabase import call_supabase_api
 from typing import List, Literal
 import random
 
-# Buat router khusus untuk endpoint 'recommend'
+
 router = APIRouter(prefix="/recommend", tags=["Rekomendasi"])
 
-# --- INI ADALAH SOLUSINYA ---
-# Kamus untuk "menerjemahkan" nama dari API Dicoding
-# ke nama kategori di API Mock Anda (sesuai screenshot)
 CATEGORY_MAP = {
     "AI Engineer": "Machine Learning",
     "Android Developer": "Android",
@@ -33,7 +30,7 @@ CATEGORY_MAP = {
 
 @router.get("/interests", response_model=List[InterestResponse])
 async def get_interests():
-    # 1. Daftar nama persis yang ingin diambil dari Database Dicoding
+
     target_list = [
         "AI Engineer",
         "Android Developer",
@@ -49,23 +46,17 @@ async def get_interests():
         "React Developer"
     ]
 
-    # 2. Format menjadi string filter Supabase: in.("Nama 1","Nama 2",...)
-    # Penting: f'"{name}"' membungkus nama dengan kutip dua agar spasi terbaca benar
     filter_query = "in.(" + ",".join([f'"{name}"' for name in target_list]) + ")"
-
-
-    # 3. Panggil API dengan filter tambahan
     data = await call_supabase_api(
         "learning_paths",
         db_type="dicoding",
         params={
             "select": "learning_path_id,learning_path_name",
-            "learning_path_name": filter_query  # <-- Filter ditambahkan di sini
+            "learning_path_name": filter_query  
         }
     )
 
     if not data:
-        # Fallback jika DB kosong atau filter tidak cocok
         raise HTTPException(status_code=404, detail="Daftar alur belajar tidak ditemukan.")
     
     interests = [
@@ -74,7 +65,6 @@ async def get_interests():
     ]
     return interests
 
-# --- Endpoint 2: Mengambil Soal Kuis (DENGAN PERBAIKAN) ---
 
 @router.get("/quiz", response_model=List[QuizQuestion])
 async def get_quiz(
@@ -83,16 +73,11 @@ async def get_quiz(
     """
     FITUR 1 (Step 2): Mengambil 5 soal kuis ACAK per level (Beginner, Intermediate, Advanced).
     """
-    
-    # 1. Terjemahkan nama minat
-    # Jika key tidak ada, fallback ke string aslinya
     tech_category_mock = CATEGORY_MAP.get(kategori_minat, kategori_minat)
     print(f"[DEBUG] Menerjemahkan minat: '{kategori_minat}' -> '{tech_category_mock}'")
     
     select_query = "id,question_desc,option_1,option_2,option_3,option_4"
     
-    # 2. Ambil kolam soal (pool) dari database
-    # Kita set limit=20 agar punya cukup opsi untuk diacak
     try:
         data_beginner, data_intermediate, data_advanced = await asyncio.gather(
             call_supabase_api(
@@ -127,28 +112,21 @@ async def get_quiz(
         print(f"Error fetching quiz data: {e}")
         raise HTTPException(status_code=500, detail="Gagal mengambil data kuis dari Supabase.")
 
-    # 3. Fungsi Helper untuk Mengacak
     def pick_random_questions(data_pool, count=5):
         if not data_pool: 
             return []
-        # Jika jumlah soal di DB kurang dari target (5), ambil semua yang ada
         if len(data_pool) <= count: 
             return data_pool
-        # Jika lebih, acak dan ambil 5
         return random.sample(data_pool, count)
-
-    # 4. Acak soal untuk setiap level
     final_beginner = pick_random_questions(data_beginner, 5)
     final_intermediate = pick_random_questions(data_intermediate, 5)
     final_advanced = pick_random_questions(data_advanced, 5)
 
-    # 5. Gabungkan hasil
     data_combined = final_beginner + final_intermediate + final_advanced
     
     if not data_combined:
         raise HTTPException(status_code=404, detail=f"Kuis untuk {kategori_minat} (kategori: {tech_category_mock}) tidak ditemukan.")
     
-    # 6. Mapping ke Schema
     questions = [
         QuizQuestion(
             question_id=item['id'],
@@ -162,9 +140,6 @@ async def get_quiz(
     
     return questions
 
-# --- Endpoint 3: Submit Jawaban & Dapatkan Rekomendasi (DENGAN PERBAIKAN) ---
-
-# ... import lainnya aman ...
 
 @router.post("/submit", response_model=SubmitResponse)
 async def handle_submission(request: SubmitRequest):
@@ -173,13 +148,10 @@ async def handle_submission(request: SubmitRequest):
     dan mengirim detail kesalahan ke AI untuk analisis personal.
     """
     
-    # 1. Validasi Input
     question_ids = [answer.question_id for answer in request.answers]
     if not question_ids:
         raise HTTPException(status_code=400, detail="Tidak ada jawaban yang diterima.")
 
-    # 2. Ambil Kunci Jawaban & TEKS SOAL dari Database
-    # [Perubahan 1] Kita tambahkan 'question_desc' di select agar AI tahu konteks soalnya
     correct_answers_data = await call_supabase_api(
         "Tech Questions", db_type="mock",
         params={
@@ -191,7 +163,6 @@ async def handle_submission(request: SubmitRequest):
     if not correct_answers_data:
         raise HTTPException(status_code=404, detail="Soal kuis tidak ditemukan di database.")
         
-    # Buat dictionary biar gampang mencocokkan: {id: {jawaban_benar: '...', soal: '...'}}
     qa_map = {
         item['id']: {
             'correct': item['correct_answer'], 
@@ -200,10 +171,9 @@ async def handle_submission(request: SubmitRequest):
         for item in correct_answers_data
     }
     
-    # 3. Hitung Skor & Kumpulkan Data Kesalahan
     skor = 0
     total_soal = len(request.answers)
-    list_analisis = [] # [Perubahan 2] List untuk menampung detail jawaban
+    list_analisis = [] 
 
     for answer in request.answers:
         if answer.question_id in qa_map:
@@ -213,9 +183,7 @@ async def handle_submission(request: SubmitRequest):
             
             if jawaban_user == jawaban_benar:
                 skor += 1
-                # Opsional: Bisa juga catat yang benar jika mau dipuji AI
             else:
-                # Ini yang salah, kita catat formatnya untuk prompt
                 detail = (
                     f"- Soal: {data_soal['question']}\n"
                     f"  Jawaban Kamu: {jawaban_user} (Salah)\n"
@@ -223,10 +191,8 @@ async def handle_submission(request: SubmitRequest):
                 )
                 list_analisis.append(detail)
 
-    # Siapkan string kesalahan untuk Prompt (Jika kosong berarti sempurna)
     analisis_str = "\n".join(list_analisis) if list_analisis else "User menjawab semua soal dengan BENAR."
 
-    # 4. Tentukan Level (Logika Sederhana Tetap Dipakai untuk memilih Course ID)
     level_rekomendasi_str = "Dasar"
     level_rekomendasi_id = 1 
     if total_soal > 0:
@@ -235,14 +201,12 @@ async def handle_submission(request: SubmitRequest):
             level_rekomendasi_str = "Menengah"
             level_rekomendasi_id = 3
 
-    # 5. Cari Kursus (Tetap sama)
     lp_data = await call_supabase_api(
         "learning_paths", db_type="dicoding",
         params={"learning_path_name": f"eq.{request.kategori_minat}", "select": "learning_path_id", "limit": 1}
     )
     if not lp_data:
-         # Fallback jika nama learning path beda dikit
-         lp_id = 1 # Default atau error handling
+         lp_id = 1 
     else:
          lp_id = lp_data[0]['learning_path_id']
 
@@ -259,8 +223,6 @@ async def handle_submission(request: SubmitRequest):
     nama_kursus = kursus_cocok[0].get('course_name') if kursus_cocok else "Kursus Umum"
     id_kursus = kursus_cocok[0].get('course_id') if kursus_cocok else None
 
-    # 6. Prompt Gemini [Perubahan 3 - Lebih Cerdas]
-    # Kita masukkan data 'analisis_str' agar Gemini bisa bahas kesalahan user
     prompt = f"""
     Kamu adalah Learning Buddy, mentor coding yang suportif.
     
@@ -283,7 +245,6 @@ async def handle_submission(request: SubmitRequest):
     5. buat rekomendasi kursus berdasrarkan kesalahan yang dibuat user berupa point-point dari yang paling basic ke yang lebih sulit.
     """
     
-    # 7. Panggil Gemini
     jawaban_ai = await call_gemini_api(prompt)
     
     return SubmitResponse(

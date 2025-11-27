@@ -8,7 +8,7 @@ from schemas.chat import AssessmentQuestion, AssessmentSubmitRequest, Assessment
 router = APIRouter(prefix="/assessment", tags=["Asesmen Minat"])
 
 
-# --- Endpoint 1: Ambil SEMUA Soal ---
+
 @router.get("/questions", response_model=List[AssessmentQuestion])
 async def get_assessment_questions():
     """
@@ -16,29 +16,24 @@ async def get_assessment_questions():
     Tidak ada batasan limit, semua baris akan diambil dan dikelompokkan.
     """
     
-    # 1. Panggil Supabase
-    # Perhatikan: Kita TIDAK menggunakan parameter 'limit' di sini.
     raw_data = await call_supabase_api(
         "Interest Questions", 
         db_type="mock",
         params={
             "select": "question_desc,option_text,category"
-            # "limit": 5  <-- JANGAN PAKAI INI agar semua soal keluar
+            
         }
     )
     
     if not raw_data:
         raise HTTPException(status_code=404, detail="Data asesmen tidak ditemukan. Pastikan tabel 'interest_questions' ada di Supabase.")
 
-    # 2. Logic Pengelompokan (Grouping)
-    # Mengubah data CSV yang flat menjadi hierarki Soal -> Opsi
     grouped_questions = {}
     q_id_counter = 1
 
     for item in raw_data:
         q_text = item['question_desc']
         
-        # Jika pertanyaan baru, buat entry baru
         if q_text not in grouped_questions:
             grouped_questions[q_text] = {
                 "id": q_id_counter,
@@ -47,7 +42,6 @@ async def get_assessment_questions():
             }
             q_id_counter += 1
         
-        # Tambahkan opsi ke pertanyaan tersebut
         grouped_questions[q_text]["options"].append({
             "text": item['option_text'],
             "value": item['category']
@@ -55,7 +49,7 @@ async def get_assessment_questions():
 
     return list(grouped_questions.values())
 
-# --- Endpoint 2: Hitung Hasil ---
+
 @router.post("/submit", response_model=AssessmentResponse)
 async def submit_assessment(request: AssessmentSubmitRequest):
     """
@@ -64,19 +58,16 @@ async def submit_assessment(request: AssessmentSubmitRequest):
     if not request.answers:
         raise HTTPException(status_code=400, detail="Tidak ada jawaban yang dikirim.")
 
-    # 1. Hitung Frekuensi Pilihan
     vote_count = {}
     for category in request.answers:
-        if category: # Hindari nilai null
+        if category: 
             vote_count[category] = vote_count.get(category, 0) + 1
     
     if not vote_count:
         raise HTTPException(status_code=400, detail="Jawaban tidak valid.")
 
-    # 2. Cari Pemenang (Kategori Terbanyak)
     winner_category = max(vote_count, key=vote_count.get)
     
-    # 3. Minta Gemini membuatkan saran
     prompt = f"""
     Seorang siswa telah mengikuti tes minat bakat IT.
     Hasilnya, minat terkuat dia adalah di bidang: '{winner_category}'.

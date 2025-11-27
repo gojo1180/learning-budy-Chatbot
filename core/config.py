@@ -2,13 +2,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 
 class Settings(BaseSettings):
-    # Variabel ini akan dimuat dari file .env
-    
     # Kunci untuk API Dicoding
     DICODING_SUPABASE_URL: str
     DICODING_SUPABASE_KEY: str
     
-    # Kunci untuk API Mock Anda
+    # Kunci untuk API Mock
     MOCK_SUPABASE_URL: str
     MOCK_SUPABASE_KEY: str
     

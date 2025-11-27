@@ -13,12 +13,11 @@ class AskResponse(BaseModel):
 
 # --- Model untuk /progress ---
 class ProgressRequest(BaseModel):
-    email: str # Kita kembalikan ke email sesuai struktur CSV
+    email: str 
 
 class ProgressResponse(BaseModel):
     bot_response: str
 
-# --- Model BARU untuk Alur Rekomendasi ---
 
 # Model untuk GET /interests
 class InterestResponse(BaseModel):
@@ -37,7 +36,7 @@ class QuizQuestion(BaseModel):
 # Model untuk POST /submit (jawaban dari user)
 class QuizAnswer(BaseModel):
     question_id: int
-    selected_answer: str # Teks dari jawaban yang dipilih
+    selected_answer: str 
 
 class SubmitRequest(BaseModel):
     kategori_minat: str
@@ -51,7 +50,7 @@ class SubmitResponse(BaseModel):
 
 class AssessmentOption(BaseModel):
     text: str
-    value: str # Ini akan berisi kategori (misal: "Mobile Development")
+    value: str 
 
 class AssessmentQuestion(BaseModel):
     id: int
@@ -59,12 +58,9 @@ class AssessmentQuestion(BaseModel):
     options: List[AssessmentOption]
 
 class AssessmentSubmitRequest(BaseModel):
-    answers: List[str] # List kategori yang dipilih user (misal: ["Mobile", "Web", "Mobile"...])
+    answers: List[str] 
 
 class AssessmentResponse(BaseModel):
     recommended_path: str
     description: str
     
-# --- Hapus Model RecommendRequest & RecommendResponse yang lama ---
-# class RecommendRequest(BaseModel): ... (HAPUS INI)
-# class RecommendResponse(BaseModel): ... (HAPUS INI)
