@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Course: Dasar Pemrograman Python | Dicoding Demo</title>
+    <title>Course: Dasar Pemrograman Python | Learning Buddy</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -31,311 +31,161 @@
       }
     </style>
   </head>
-  <body class="bg-gray-50 text-gray-800">
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-30">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex items-center gap-4">
-            <div class="flex-shrink-0 flex items-center gap-2">
-              <div
-                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold"
-              >
-                D
-              </div>
-              <span class="font-bold text-xl tracking-tight text-gray-900"
-                >Dicoding
-                <span class="text-blue-600 font-normal">Academy</span></span
-              >
-            </div>
-
-            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <a
-                href="#"
-                class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Kelas Saya
-              </a>
-              <a
-                href="#"
-                class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Katalog
-              </a>
-              <a
-                href="#"
-                class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Alur Belajar
-              </a>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-4">
-            <div class="hidden md:flex flex-col items-end mr-2">
-              <span class="text-sm font-medium text-gray-700">Rafi Ahmad</span>
-              <span class="text-xs text-gray-500">Siswa Aktif</span>
-            </div>
-            <div
-              class="h-9 w-9 rounded-full bg-gray-200 border-2 border-white shadow-sm overflow-hidden"
-            >
-              <svg
-                class="h-full w-full text-gray-400"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-
+  <body class="bg-gray-50 text-gray-800 font-sans antialiased">
+ 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="flex flex-col lg:flex-row gap-8">
-
-        <aside class="w-full lg:w-1/4 flex-shrink-0">
-          <div
-            class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-24"
-          >
-            <div class="p-4 border-b border-gray-100 bg-gray-50">
-              <h3 class="font-semibold text-gray-700">Daftar Materi</h3>
-              <div class="text-xs text-gray-500 mt-1">
-                Dasar Pemrograman Python
-              </div>
-            </div>
-            <ul class="divide-y divide-gray-100 max-h-[70vh] overflow-y-auto">
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-3 bg-blue-50 text-blue-700 border-l-4 border-blue-600"
-                >
-                  <span
-                    class="text-xs font-bold uppercase text-blue-400 block mb-1"
-                    >Modul 1</span
-                  >
-                  <span class="text-sm font-medium"
-                    >Pengenalan Python & Sejarah</span
-                  >
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-3 hover:bg-gray-50 text-gray-600 border-l-4 border-transparent"
-                >
-                  <span
-                    class="text-xs font-bold uppercase text-gray-400 block mb-1"
-                    >Modul 2</span
-                  >
-                  <span class="text-sm">Instalasi & Persiapan Tools</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-3 hover:bg-gray-50 text-gray-600 border-l-4 border-transparent"
-                >
-                  <span
-                    class="text-xs font-bold uppercase text-gray-400 block mb-1"
-                    >Modul 3</span
-                  >
-                  <span class="text-sm">Variabel & Tipe Data</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block px-4 py-3 hover:bg-gray-50 text-gray-600 border-l-4 border-transparent"
-                >
-                  <span
-                    class="text-xs font-bold uppercase text-gray-400 block mb-1"
-                    >Modul 4</span
-                  >
-                  <span class="text-sm">Struktur Kontrol: Percabangan</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </aside>
-
+        <!-- Main Content -->
         <main class="flex-1 min-w-0">
-          <div
-            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-10"
-          >
-            <nav
-              class="flex text-sm text-gray-500 mb-6"
-              aria-label="Breadcrumb"
-            >
-              <ol class="flex items-center space-x-2">
-                <li><a href="#" class="hover:text-blue-600">Home</a></li>
-                <li><span class="text-gray-300">/</span></li>
-                <li>
-                  <a href="#" class="hover:text-blue-600">Python Dasar</a>
-                </li>
-                <li><span class="text-gray-300">/</span></li>
-                <li class="text-gray-900 font-medium" aria-current="page">
-                  Pengenalan
-                </li>
-              </ol>
-            </nav>
-
-            <h1
-              class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight"
-            >
-              Pengenalan Bahasa Pemrograman Python
-            </h1>
-
-            <div
-              class="flex items-center gap-4 mb-8 pb-8 border-b border-gray-100"
-            >
-              <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-              >
-                Beginner
-              </span>
-              <span class="text-sm text-gray-500 flex items-center gap-1">
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
-                5 menit baca
-              </span>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            
+            <!-- Hero / Header Image (Optional, using gradient for now) -->
+            <div class="h-32 bg-gradient-to-r from-blue-600 to-indigo-700 relative">
+               <div class="absolute -bottom-6 left-6 sm:left-10">
+                  <div class="bg-white p-2 rounded-lg shadow-md inline-block">
+                     <div class="w-12 h-12 bg-yellow-100 rounded flex items-center justify-center text-2xl">🐍</div>
+                  </div>
+               </div>
             </div>
-            <div
-              class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-6"
-            >
-              <p class="text-lg">
-                Python adalah bahasa pemrograman tingkat tinggi yang dibuat oleh
-                <strong>Guido van Rossum</strong> dan pertama kali dirilis pada
-                tahun 1991. Python dirancang dengan filosofi desain yang
-                menekankan pada keterbacaan kode, yang mana konstruksi bahasanya
-                dan pendekatan berorientasi objek bertujuan untuk membantu
-                programmer menulis kode yang jelas dan logis untuk proyek skala
-                kecil maupun besar.
-              </p>
 
-              <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
-                Mengapa Memilih Python?
-              </h2>
-              <p>
-                Ada beberapa alasan mengapa Python menjadi salah satu bahasa
-                pemrograman paling populer di dunia saat ini:
-              </p>
-              <ul class="list-disc pl-6 space-y-2">
-                <li>
-                  <strong>Mudah Dipelajari:</strong> Sintaks Python sangat mirip
-                  dengan bahasa Inggris manusia, membuatnya sangat ramah bagi
-                  pemula.
-                </li>
-                <li>
-                  <strong>Serbaguna (Versatile):</strong> Python dapat digunakan
-                  untuk pengembangan web (Django, Flask), Data Science (Pandas,
-                  NumPy), Kecerdasan Buatan (TensorFlow, PyTorch), hingga
-                  otomatisasi skrip sederhana.
-                </li>
-                <li>
-                  <strong>Komunitas Besar:</strong> Dukungan komunitas yang
-                  masif berarti Anda dapat dengan mudah menemukan solusi jika
-                  mengalami error.
-                </li>
-                <li>
-                  <strong>Open Source:</strong> Python gratis untuk digunakan
-                  dan didistribusikan, bahkan untuk tujuan komersial.
-                </li>
-              </ul>
+            <div class="px-6 sm:px-10 pt-10 pb-10">
+                <div class="flex items-center gap-3 mb-4">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Beginner
+                  </span>
+                  <span class="text-sm text-gray-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    5 menit baca
+                  </span>
+                  <span class="text-sm text-gray-500 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                    1.2k views
+                  </span>
+                </div>
 
-              <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
-                Filosofi "Zen of Python"
-              </h2>
-              <p>
-                Python memiliki prinsip desain yang unik yang dikenal sebagai
-                <em>Zen of Python</em>. Beberapa poin utamanya adalah:
-              </p>
-              <blockquote
-                class="border-l-4 border-blue-500 pl-4 italic bg-gray-50 py-2 pr-2 my-4 rounded-r text-gray-600"
-              >
-                "Beautiful is better than ugly.<br />
-                Explicit is better than implicit.<br />
-                Simple is better than complex.<br />
-                Readability counts."
-              </blockquote>
+                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+                  Pengenalan Bahasa Pemrograman Python
+                </h1>
 
-              <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
-                Contoh Kode Sederhana
-              </h2>
-              <p>
-                Bandingkan kode Java dengan Python untuk mencetak "Hello World".
-                Di Python, Anda hanya membutuhkan satu baris kode:
-              </p>
+                <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-6">
+                  <p class="text-lg">
+                    Python adalah bahasa pemrograman tingkat tinggi yang dibuat oleh
+                    <strong>Guido van Rossum</strong> dan pertama kali dirilis pada
+                    tahun 1991. Python dirancang dengan filosofi desain yang
+                    menekankan pada keterbacaan kode, yang mana konstruksi bahasanya
+                    dan pendekatan berorientasi objek bertujuan untuk membantu
+                    programmer menulis kode yang jelas dan logis untuk proyek skala
+                    kecil maupun besar.
+                  </p>
 
-              <div
-                class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-sm overflow-x-auto shadow-inner my-4"
-              >
-                <pre><code># Ini adalah komentar di Python
-print("Hello, World!")
+                  <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center gap-2">
+                    <span class="text-blue-600">#</span> Mengapa Memilih Python?
+                  </h2>
+                  <p>
+                    Ada beberapa alasan mengapa Python menjadi salah satu bahasa
+                    pemrograman paling populer di dunia saat ini:
+                  </p>
+                  <div class="grid sm:grid-cols-2 gap-4 my-6">
+                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                           <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                           Mudah Dipelajari
+                        </h4>
+                        <p class="text-sm">Sintaks Python sangat mirip dengan bahasa Inggris manusia, membuatnya sangat ramah bagi pemula.</p>
+                     </div>
+                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                           <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                           Serbaguna (Versatile)
+                        </h4>
+                        <p class="text-sm">Web Dev (Django, Flask), Data Science, AI (TensorFlow), hingga otomatisasi.</p>
+                     </div>
+                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                           <svg class="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                           Komunitas Besar
+                        </h4>
+                        <p class="text-sm">Dukungan komunitas masif, mudah menemukan solusi jika mengalami error.</p>
+                     </div>
+                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                           <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                           Open Source
+                        </h4>
+                        <p class="text-sm">Gratis untuk digunakan dan didistribusikan, bahkan untuk tujuan komersial.</p>
+                     </div>
+                  </div>
 
-# Contoh variabel
-nama = "Budi"
-umur = 20
+                  <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center gap-2">
+                    <span class="text-blue-600">#</span> Filosofi "Zen of Python"
+                  </h2>
+                  <p>
+                    Python memiliki prinsip desain yang unik yang dikenal sebagai
+                    <em>Zen of Python</em>. Beberapa poin utamanya adalah:
+                  </p>
+                  <blockquote class="border-l-4 border-blue-500 pl-6 py-4 italic bg-blue-50 rounded-r-lg text-gray-700 my-6">
+                    "Beautiful is better than ugly.<br />
+                    Explicit is better than implicit.<br />
+                    Simple is better than complex.<br />
+                    Readability counts."
+                  </blockquote>
 
-if umur >= 17:
-    print(f"{nama} sudah boleh membuat KTP")
-else:
-    print(f"{nama} belum cukup umur")</code></pre>
-              </div>
+                  <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center gap-2">
+                    <span class="text-blue-600">#</span> Contoh Kode Sederhana
+                  </h2>
+                  <p>
+                    Bandingkan kode Java dengan Python untuk mencetak "Hello World".
+                    Di Python, Anda hanya membutuhkan satu baris kode:
+                  </p>
 
-              <p>
-                Sangat sederhana, bukan? Tidak perlu mendefinisikan class atau
-                method `main` yang rumit hanya untuk program dasar.
-              </p>
+                  <div class="bg-[#1e293b] text-gray-100 rounded-xl p-6 font-mono text-sm overflow-x-auto shadow-lg my-6 border border-gray-700 relative group">
+                    <div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button class="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-gray-300">Copy</button>
+                    </div>
+                    <pre><code><span class="text-gray-500"># Ini adalah komentar di Python</span>
+<span class="text-purple-400">print</span>(<span class="text-green-400">"Hello, World!"</span>)
 
-              <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
-                Kesimpulan
-              </h2>
-              <p>
-                Python adalah pintu gerbang yang sangat baik untuk memasuki
-                dunia pemrograman. Keseimbangan antara kemudahan penggunaan dan
-                kekuatan fitur menjadikannya pilihan utama di industri teknologi
-                modern, mulai dari startup hingga raksasa teknologi seperti
-                Google dan NASA.
-              </p>
-            </div>
-            <div
-              class="mt-12 pt-8 border-t border-gray-200 flex justify-between"
-            >
-              <button
-                class="text-gray-400 cursor-not-allowed font-medium flex items-center gap-2"
-                disabled
-              >
-                &larr; Sebelumnya
-              </button>
-              <a
-                href="#"
-                class="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2"
-              >
-                Selanjutnya: Instalasi & Tools &rarr;
-              </a>
+<span class="text-gray-500"># Contoh variabel</span>
+<span class="text-blue-400">nama</span> = <span class="text-green-400">"Budi"</span>
+<span class="text-blue-400">umur</span> = <span class="text-orange-400">20</span>
+
+<span class="text-purple-400">if</span> umur >= <span class="text-orange-400">17</span>:
+    <span class="text-purple-400">print</span>(f<span class="text-green-400">"{nama} sudah boleh membuat KTP"</span>)
+<span class="text-purple-400">else</span>:
+    <span class="text-purple-400">print</span>(f<span class="text-green-400">"{nama} belum cukup umur"</span>)</code></pre>
+                  </div>
+
+                  <p>
+                    Sangat sederhana, bukan? Tidak perlu mendefinisikan class atau
+                    method `main` yang rumit hanya untuk program dasar.
+                  </p>
+
+                  <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center gap-2">
+                    <span class="text-blue-600">#</span> Kesimpulan
+                  </h2>
+                  <p>
+                    Python adalah pintu gerbang yang sangat baik untuk memasuki
+                    dunia pemrograman. Keseimbangan antara kemudahan penggunaan dan
+                    kekuatan fitur menjadikannya pilihan utama di industri teknologi
+                    modern, mulai dari startup hingga raksasa teknologi seperti
+                    Google dan NASA.
+                  </p>
+                </div>             
             </div>
           </div>
+          
           <footer class="mt-12 text-center text-gray-500 text-sm pb-8">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="hover:text-gray-700">Tentang Kami</a>
+                <a href="#" class="hover:text-gray-700">Kebijakan Privasi</a>
+                <a href="#" class="hover:text-gray-700">Bantuan</a>
+            </div>
             &copy; 2024 Learning Buddy Demo Platform. All rights reserved.
           </footer>
         </main>
       </div>
     </div>
 
-    <script src="https://learning-budy-chatbot.vercel.app/widget/js/widget.js"></script>
+    <script src="http://localhost:8000/widget/js/widget.js"></script>
   </body>
 </html>

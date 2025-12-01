@@ -38,7 +38,6 @@ async def call_supabase_api(
     async with httpx.AsyncClient() as client:
         try:
             url = f"{config['base_url']}/{endpoint}"
-            print(f"[DEBUG] Memanggil API: {url}") 
             
             response = await client.get(
                 url,

@@ -53,15 +53,12 @@ async def handle_ask(request: AskRequest):
             konteks_str = "Tidak ada konteks spesifik yang ditemukan."
 
     print(f"[DEBUG] Sumber Konteks: {sumber_konteks}")
-
-    # --- FORMAT RIWAYAT CHAT (HISTORY) ---
     history_str = ""
     if request.history:
         history_str = "\n\nRIWAYAT PERCAKAPAN SEBELUMNYA (Gunakan untuk konteks 'ini', 'itu', 'dia', dll):\n"
         for msg in request.history:
             role = "User" if msg.get("role") == "user" else "Assistant"
             content = msg.get("content", "")
-            # Skip pesan kosong
             if content:
                 history_str += f"{role}: {content}\n"
         history_str += "[AKHIR RIWAYAT]\n"

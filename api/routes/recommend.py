@@ -242,7 +242,7 @@ async def handle_submission(request: SubmitRequest):
     2. JIKA ada jawaban salah, pilih 1 atau 2 kesalahan yang paling fatal/mendasar, lalu jelaskan secara singkat kenapa jawaban user salah dan apa konsep yang benar (gunakan bahasa santai). Jangan bahas semua kesalahan agar tidak kepanjangan.
     3. Arahkan user untuk mengambil kursus '{nama_kursus}' untuk memperbaiki pemahaman tersebut.
     4. Jaga respon tetap ringkas (maksimal 3 paragraf).
-    5. buat rekomendasi kursus berdasrarkan kesalahan yang dibuat user berupa point-point dari yang paling basic ke yang lebih sulit.
+    5. Sebutkan 6 skill teknis spesifik (keyword) yang harus dikuasai user untuk memperbaiki kesalahannya, urutkan dari basic ke advanced.
     """
     
     jawaban_ai = await call_gemini_api(prompt)

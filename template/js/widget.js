@@ -1,6 +1,6 @@
 (function () {
   // 1. Konfigurasi
-  const API_BASE_URL = "https://learning-budy-chatbot.vercel.app"; // Ganti dengan URL backend Anda
+  const API_BASE_URL = "http://localhost:8000"; // Ganti dengan URL backend Anda
   const WIDGET_CSS_URL = API_BASE_URL + "/widget/style/widget.css";
   const VUE_CDN_URL = "https://unpkg.com/vue@3/dist/vue.global.js";
 
@@ -54,7 +54,7 @@
                                 <span>Learning Buddy</span>
                                 <div>
                                     <button class="chat-header-fullscreen" v-if="windowState === 'popup'" @click="goFullscreen">
-                                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
                                     </button>
                                     <button class="chat-header-close" @click="closeChat">&times;</button>
                                 </div>
@@ -324,8 +324,22 @@
         },
 
         // --- UPDATED FUNCTION: FORMAT MESSAGE WITH CODE BLOCKS ---
+        escapeHtml(text) {
+          const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+          };
+          return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        },
+
         formatMessage(text) {
           let formatted = String(text);
+          
+          // 0. Sanitize HTML first!
+          formatted = this.escapeHtml(formatted);
           
           // 1. Handle Code Blocks (``` ... ```)
           // Menggunakan regex non-greedy ([\s\S]*?) untuk menangkap konten multi-line di dalam backticks
@@ -502,7 +516,7 @@
           }
         },
 
-        // FITUR 2: Tanya Soal (UPDATED WITH HISTORY)
+        // FITUR 2: Tanya Soal 
         async callAskApi(question) {
           try {
             let pageCtx = { full: null, visible: null };
@@ -514,7 +528,6 @@
                  console.log("[DEBUG] Mode 'Chat Biasa': Konteks halaman NULL (Skip)");
             }
 
-            // NEW: Get History
             const history = this.getHistory();
             
             const response = await fetch(`${API_BASE_URL}/api/v1/ask`, {
@@ -525,7 +538,7 @@
                 preset: this.chatMode,
                 full_page_content: pageCtx.full,  
                 visible_text: pageCtx.visible,
-                history: history // Kirim History
+                history: history 
               }),
             });
             if (!response.ok) throw new Error("API /ask gagal");
