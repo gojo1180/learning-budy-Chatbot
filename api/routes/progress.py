@@ -1,30 +1,35 @@
-from fastapi import APIRouter
-from schemas.chat import ProgressRequest, ProgressResponse
+from fastapi import APIRouter, Depends
+from schemas.chat import ProgressResponse
 from services.gemini import call_gemini_api
 from services.supabase import call_supabase_api
+from api.deps import get_current_user_email # Import Satpam
 import json
-
 
 router = APIRouter(prefix="/progress", tags=["Progres Siswa"])
 
+# Hapus parameter request body, ganti dengan Dependency Injection
 @router.post("/", response_model=ProgressResponse)
-async def handle_progress(request: ProgressRequest):
+async def handle_progress(current_email: str = Depends(get_current_user_email)):
     """
     FITUR 3: Mengecek progres belajar pengguna.
-    Mengambil data dari Mock Server berdasarkan email.
+    Mengambil data berdasarkan EMAIL DARI TOKEN LOGIN (Otomatis).
     """
     
+    print(f"[DEBUG] User request progres untuk email: {current_email}")
+
+    # Gunakan email dari token untuk cari data
     data_progres_list = await call_supabase_api(
         "Student Progress", 
         db_type="mock",      
         params={
-            "email": f"eq.{request.email}",
+            "email": f"eq.{current_email}", # Filter pakai email token
             "select": "*"                  
         }
     )
     
     if not data_progres_list:
-        return ProgressResponse(bot_response=f"Maaf, saya tidak dapat menemukan data progres untuk email {request.email}. Pastikan emailnya ada di database mock Anda.")
+        return ProgressResponse(bot_response=f"Halo! Saya melihat Anda login sebagai {current_email}, namun saya tidak menemukan data progres untuk email tersebut di database nilai. Pastikan email akun Anda sesuai dengan data sekolah.")
+    
     data_progres_str = json.dumps(data_progres_list)
     
     prompt = f"""

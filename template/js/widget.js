@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   // 1. Konfigurasi
   const API_BASE_URL = "http://localhost:8000"; // Ganti dengan URL backend Anda
   const WIDGET_CSS_URL = API_BASE_URL + "/widget/style/widget.css";
@@ -51,7 +51,11 @@
                         <!-- Mode Popup -->
                         <template v-if="windowState === 'popup'">
                             <div class="chat-header">
-                                <span>Learning Buddy</span>
+                                <div class="flex flex-col">
+                                    <span>Learning Buddy</span>
+                                    <span v-if="isLoggedIn" class="text-xs font-normal opacity-80">Halo, {{ userEmail }}</span>
+                                    <span v-else class="text-xs font-normal opacity-80 text-yellow-300">Mode Tamu</span>
+                                </div>
                                 <div>
                                     <button class="chat-header-fullscreen" v-if="windowState === 'popup'" @click="goFullscreen">
                                         <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
@@ -73,9 +77,9 @@
                             </div>
                             
                             <div class="chat-footer">
-                                <!-- CUSTOM MODEL SELECTOR (Popup) -->
+                                <!-- CUSTOM MODEL SELECTOR (Popup) - Disable jika belum login -->
                                 <div class="model-selector" v-click-outside="closeSelector">
-                                    <button class="model-selector-btn" @click="toggleSelector" :disabled="isLoading">
+                                    <button class="model-selector-btn" @click="toggleSelector" :disabled="isLoading || !isLoggedIn" :title="!isLoggedIn ? 'Login untuk ganti mode' : ''">
                                         <span>{{ getModeLabel(chatMode) }}</span>
                                         <svg class="model-selector-arrow" :class="{ 'open': isSelectorOpen }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                     </button>
@@ -175,9 +179,8 @@
                                     </div>
                                 </div>
                                 <div class="fs-footer">
-                                    <!-- CUSTOM MODEL SELECTOR (Fullscreen) -->
                                     <div class="model-selector" v-click-outside="closeSelector">
-                                        <button class="model-selector-btn" @click="toggleSelector" :disabled="isLoading || showQuizPanel">
+                                        <button class="model-selector-btn" @click="toggleSelector" :disabled="isLoading || showQuizPanel || !isLoggedIn" :title="!isLoggedIn ? 'Login untuk ganti mode' : ''">
                                             <span>{{ getModeLabel(chatMode) }}</span>
                                             <svg class="model-selector-arrow" :class="{ 'open': isSelectorOpen }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </button>
@@ -237,13 +240,16 @@
         return {
           windowState: "closed",
           isLoading: false,
+          isLoggedIn: false, // State Login Baru
+          userEmail: '', // Email user
+          authToken: '', // Token JWT
           newMessage: "",
           messages: [],
           currentFlow: "main_menu",
           inputPlaceholder: "Ketik atau pilih opsi...",
           showQuizPanel: false,
           chatMode: "to the point",
-          isSelectorOpen: false, // State untuk dropdown
+          isSelectorOpen: false, 
           chatModes: [
             { 
               id: "to the point", 
@@ -275,6 +281,16 @@
           assessmentContext: { questions: [], currentQuestionIndex: 0, answers: [] },
         };
       },
+      mounted() {
+          // --- CEK STATUS LOGIN SAAT LOAD ---
+          const token = localStorage.getItem('access_token');
+          const email = localStorage.getItem('user_email');
+          if (token) {
+              this.isLoggedIn = true;
+              this.authToken = token;
+              this.userEmail = email || 'User';
+          }
+      },
       computed: {
         activeContext() { return this.isAssessmentMode ? this.assessmentContext : this.quizContext; },
         currentQuestion() {
@@ -293,7 +309,7 @@
       },
       methods: {
         toggleSelector() {
-            this.isSelectorOpen = !this.isSelectorOpen;
+            if(this.isLoggedIn) this.isSelectorOpen = !this.isSelectorOpen;
         },
         closeSelector() {
             this.isSelectorOpen = false;
@@ -313,17 +329,14 @@
           });
         },
         
-        // --- NEW FUNCTION: AUTO RESIZE TEXTAREA ---
         autoResize(event) {
             const el = event.target;
-            el.style.height = 'auto'; // Reset dulu
-            el.style.height = el.scrollHeight + 'px'; // Set sesuai konten
+            el.style.height = 'auto'; 
+            el.style.height = el.scrollHeight + 'px';
         },
         newline() {
-            // Biarkan default behavior (baris baru) terjadi
         },
 
-        // --- UPDATED FUNCTION: FORMAT MESSAGE WITH CODE BLOCKS ---
         escapeHtml(text) {
           const map = {
             '&': '&amp;',
@@ -337,22 +350,14 @@
 
         formatMessage(text) {
           let formatted = String(text);
-          
-          // 0. Sanitize HTML first!
           formatted = this.escapeHtml(formatted);
-          
-          // 1. Handle Code Blocks (``` ... ```)
-          // Menggunakan regex non-greedy ([\s\S]*?) untuk menangkap konten multi-line di dalam backticks
           formatted = formatted.replace(/```(\w*)([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>');
-          
-          // 2. Handle Markdown lainnya
           formatted = formatted.replace(/^### (.*$)/gim, '<h3 style="margin: 12px 0 6px 0; font-size: 15px; font-weight: 700;">$1</h3>');
           formatted = formatted.replace(/^## (.*$)/gim, '<h2 style="margin: 14px 0 8px 0; font-size: 16px; font-weight: 700;">$1</h2>');
           formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
           formatted = formatted.replace(/^\s*[\-\*]\s+(.*)$/gm, '<div style="display: flex; align-items: flex-start; margin-left: 8px; margin-bottom: 4px;"><span style="margin-right:6px;">•</span><span>$1</span></div>');
           formatted = formatted.replace(/(?<!\w)\*([^\*\n]+)\*(?!\w)/g, "<em>$1</em>");
           formatted = formatted.replace(/\n/g, "<br>");
-          
           return formatted;
         },
         
@@ -374,14 +379,26 @@
         },
         goFullscreen() { this.windowState = "fullscreen"; },
         closeChat() { this.windowState = "closed"; },
+        
         showInitialTemplates() {
+          // --- LOGIKA FILTER MENU ---
+          let options = ["Cek Minat Belajar", "Rekomendasi Kuis"];
+          
+          if (this.isLoggedIn) {
+             options.push("Cek Progres", "Tanya Layar");
+          }
+
+          let greeting = this.isLoggedIn 
+              ? `Halo ${this.userEmail.split('@')[0]}! Saya Learning Buddy. Anda bisa pilih salah satu opsi di bawah ini:`
+              : "Halo! Saya Learning Buddy. Silakan login untuk fitur lengkap, atau pilih opsi tamu:";
+
           this.messages.push({
             sender: "server",
-            text: "Halo! Saya Learning Buddy. Anda bisa pilih salah satu opsi di bawah ini:",
-            options: ["Cek Minat Belajar", "Cek Progres", "Rekomendasi Kuis", "Tanya layar"],
+            text: greeting,
+            options: options,
           });
           this.currentFlow = "main_menu";
-          this.inputPlaceholder = "Ketik atau pilih opsi...";
+          this.inputPlaceholder = this.isLoggedIn ? "Ketik atau pilih opsi..." : "Login untuk chat...";
           this.scrollToBottom();
         },
         resetQuizContext() {
@@ -401,7 +418,6 @@
           this.messages.push({ sender: "klien", text: msgText });
           this.newMessage = "";
           
-          // Reset height textarea setelah kirim
           this.$nextTick(() => {
               if (this.$refs.chatInput) this.$refs.chatInput.style.height = 'auto';
               if (this.$refs.chatInputFs) this.$refs.chatInputFs.style.height = 'auto';
@@ -411,7 +427,6 @@
           this.handleMessage(msgText);
         },
         
-        // --- FUNGSI HELPER: GET CONTEXT ---
         getPageContext() {
             const appElement = document.getElementById('learning-buddy-app');
             let fullContent = "";
@@ -431,14 +446,9 @@
             return { full: fullContent.trim(), visible: visibleTexts.join("\n") };
         },
 
-        // --- NEW: FUNGSI GET HISTORY ---
         getHistory() {
-             // Ambil semua pesan KECUALI yang terakhir (karena itu pertanyaan saat ini yang baru di-push)
             const previousMessages = this.messages.slice(0, -1);
-            
-            // Ambil 6 pesan terakhir dari previousMessages untuk hemat token
             const limitedHistory = previousMessages.slice(-6);
-
             return limitedHistory.map(msg => ({
                 role: msg.sender === 'klien' ? 'user' : 'model',
                 content: msg.text
@@ -451,9 +461,31 @@
           const msgLower = msgText.toLowerCase();
 
           try {
+            // --- PEMBATASAN USER NON-LOGIN ---
+            if (!this.isLoggedIn) {
+                // Izinkan flow Minat & Kuis
+                const allowedKeywords = ["cek minat", "minat belajar", "rekomendasi kuis", "kuis"];
+                const isAllowed = allowedKeywords.some(keyword => msgLower.includes(keyword)) || 
+                                  this.currentFlow === "recommend_await_interest" ||
+                                  this.currentFlow === "recommend_await_quiz_answer" ||
+                                  this.isAssessmentMode;
+
+                if (!isAllowed) {
+                     this.messages.push({ 
+                         sender: "server", 
+                         text: "Maaf, Anda harus **Login** terlebih dahulu untuk menggunakan fitur Chat, Tanya Layar, atau Cek Progres.\n\nSilakan klik tombol **Masuk** di pojok kanan atas halaman." 
+                     });
+                     this.isLoading = false;
+                     this.currentFlow = "main_menu";
+                     this.showInitialTemplates();
+                     return;
+                }
+            }
+
             switch (this.currentFlow) {
               case "awaiting_email":
-                await this.callProgressApi(msgText);
+                 // Flow lama (deprecated by Auth Token), tapi kita simpan logicnya
+                await this.callProgressApi(msgText); 
                 break;
               case "awaiting_question":
                 await this.callAskApi(msgText);
@@ -465,9 +497,9 @@
               case "main_menu":
               default:
                 if (msgLower.includes("cek progres")) {
-                  const myEmail = "sari.kusuma63@example.com"; 
-                  this.messages.push({ sender: "server", text: `Baik, saya akan mengecek progres belajar untuk email: ${myEmail}...` });
-                  await this.callProgressApi(myEmail);
+                    // Gunakan Token Auth, tidak perlu hardcode email
+                    this.messages.push({ sender: "server", text: "Baik, saya sedang mengecek data progres Anda..." });
+                    await this.callProgressApi();
                 } else if (msgLower.includes("rekomendasi kuis")) {
                   await this.startQuizFlow();
                 } else if (msgLower.includes("cek minat") || msgLower.includes("minat belajar")) {
@@ -494,38 +526,41 @@
           }
         },
 
-        async callProgressApi(email) {
+        async callProgressApi(emailInput = null) {
           try {
-            const response = await fetch(`${API_BASE_URL}/api/v1/progress`, {
+            // Logic Baru: Kirim Token di Header
+            const response = await fetch(`${API_BASE_URL}/api/v1/progress/`, {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email: email }),
+              headers: { 
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${this.authToken}` // HEADER PENTING
+              },
+              // Body kosong karena backend ambil user dari token
+              body: JSON.stringify({}), 
             });
-            if (!response.ok) {
-              const errData = await response.json();
-              throw new Error(errData.detail || `Email tidak ditemukan`);
-            }
+            
             const data = await response.json();
+            
+            if (!response.ok) {
+              throw new Error(data.detail || data.bot_response || `Gagal mengecek progres`);
+            }
             this.messages.push({ sender: "server", text: data.bot_response });
           } catch (error) {
             console.error("Error di callProgressApi:", error);
-            this.messages.push({ sender: "server", text: `Maaf, terjadi kesalahan: ${error.message}` });
+            this.messages.push({ sender: "server", text: `Maaf: ${error.message}` });
           } finally {
             this.currentFlow = "main_menu";
-            this.inputPlaceholder = "Ketik atau pilih opsi...";
+            this.inputPlaceholder = this.isLoggedIn ? "Ketik atau pilih opsi..." : "Login untuk chat...";
           }
         },
 
-        // FITUR 2: Tanya Soal 
         async callAskApi(question) {
           try {
             let pageCtx = { full: null, visible: null };
 
             if (this.currentFlow === "awaiting_question") {
-                 console.log("[DEBUG] Mode 'Tanya Soal' Aktif: Mengirim konteks halaman...");
+                 console.log("[DEBUG] Mode 'Tanya Soal' Aktif");
                  pageCtx = this.getPageContext();
-            } else {
-                 console.log("[DEBUG] Mode 'Chat Biasa': Konteks halaman NULL (Skip)");
             }
 
             const history = this.getHistory();
@@ -550,7 +585,7 @@
             this.messages.push({ sender: "server", text: `Maaf, terjadi kesalahan: ${error.message}` });
           } finally {
             this.currentFlow = "main_menu";
-            this.inputPlaceholder = "Ketik atau pilih opsi...";
+            this.inputPlaceholder = this.isLoggedIn ? "Ketik atau pilih opsi..." : "Login untuk chat...";
           }
         },
         
