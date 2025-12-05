@@ -320,6 +320,15 @@ p code, li code, span code {
     border-right: 1px solid var(--col-navy);
 }
 
+/* --- UPDATED: Sidebar Logic (Roadmap + Quiz) --- */
+.chat-window.fullscreen .fs-sidebar.active {
+    width: 55%; 
+    min-width: 400px; 
+    max-width: 600px;
+    background-color: var(--col-darkest);
+}
+/* --------------------------------------------- */
+
 .chat-window.fullscreen .fs-chat-area {
     flex-grow: 1;
     display: flex;
@@ -525,17 +534,15 @@ p code, li code, span code {
 }
 
 /* ... (Style sidebar quiz, dropdown, mobile tetap sama) ... */
-.chat-window.fullscreen .fs-sidebar.quiz-active {
-    width: 55%; min-width: 400px; max-width: 600px;
-    background-color: var(--col-navy);
-}
-
 .fs-quiz-container {
     display: flex; flex-direction: column;
     height: 100%; width: 100%; color: var(--col-white);
     opacity: 0; transition: opacity 0.2s ease 0.1s; flex-shrink: 0;
 }
-.fs-sidebar.quiz-active .fs-quiz-container { opacity: 1; }
+.fs-sidebar.active .fs-quiz-container,
+.fs-sidebar.active .fs-progress-container { 
+    opacity: 1; 
+}
 
 .fs-quiz-header {
     padding: 24px; flex-shrink: 0;
@@ -741,8 +748,125 @@ p code, li code, span code {
   color: #94a3b8; 
 }
 
+/* ================================================= */
+/* STYLE UNTUK PANEL ROADMAP BARU           */
+/* ================================================= */
 
+.fs-progress-container {
+    display: flex; flex-direction: column;
+    height: 100%; width: 100%;
+    animation: fadeInMenu 0.3s ease-out;
+}
 
+.fs-roadmap-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 24px;
+    background-color: var(--col-bg-chat); /* Kontras dengan sidebar gelap */
+}
+
+.roadmap-course-group {
+    margin-bottom: 30px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.roadmap-course-title {
+    font-weight: 700;
+    color: var(--col-navy);
+    margin: 0 0 20px 0;
+    font-size: 1.1em;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 10px;
+}
+
+/* --- TIMELINE VERTICAL --- */
+.roadmap-timeline {
+    position: relative;
+    padding-left: 20px;
+    border-left: 3px solid #e2e8f0; /* Garis vertikal abu-abu */
+    margin-left: 10px;
+}
+
+.roadmap-item {
+    position: relative;
+    margin-bottom: 25px;
+    padding-left: 25px; /* Jarak teks dari garis */
+}
+
+/* Titik (Dot) di Garis */
+.roadmap-dot {
+    position: absolute;
+    left: -28px; /* Mengatur posisi titik pas di tengah garis (20px padding + 3px border + radius) */
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #cbd5e1;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 2;
+}
+
+/* Style Item: ACTIVE (Sedang Dipelajari) */
+.roadmap-item.active .roadmap-dot {
+    background-color: var(--col-medium-blue);
+    width: 20px; height: 20px;
+    left: -30px;
+    border-color: var(--col-pale-blue);
+}
+.roadmap-item.active .roadmap-content {
+    background: #eff6ff;
+    border: 1px solid var(--col-soft-blue);
+}
+
+/* Style Item: TARGET (Bintang) */
+.roadmap-item.target .roadmap-dot.star {
+    background-color: #f59e0b; /* Kuning Emas */
+    color: white;
+    font-size: 10px;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* Konten Teks */
+.roadmap-content {
+    background: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+}
+.roadmap-content p {
+    margin: 0;
+    font-size: 0.95em;
+    color: var(--col-darkest);
+    font-weight: 600;
+}
+.roadmap-tag, .roadmap-date {
+    display: block;
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    color: #64748b;
+}
+.roadmap-item.active .roadmap-tag {
+    color: var(--col-medium-blue);
+    font-weight: 800;
+}
+
+/* Animasi Pulse untuk yang sedang aktif */
+@keyframes pulse-dot {
+    0% { box-shadow: 0 0 0 0 rgba(84, 131, 179, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(84, 131, 179, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(84, 131, 179, 0); }
+}
+.roadmap-dot.pulse {
+    animation: pulse-dot 2s infinite;
+}
+
+/* Responsif Mobile */
 @media (max-width: 768px) {
     .chat-window:not(.fullscreen) {
         width: 100% !important;
@@ -758,10 +882,11 @@ p code, li code, span code {
     .chat-window.fullscreen {
         flex-direction: column;
     }
-    .chat-window.fullscreen .fs-sidebar:not(.quiz-active) {
+    .chat-window.fullscreen .fs-sidebar:not(.active) {
         display: none;
     }
-    .chat-window.fullscreen .fs-sidebar.quiz-active {
+    /* Ganti .quiz-active jadi .active agar handle roadmap juga */
+    .chat-window.fullscreen .fs-sidebar.active {
         width: 100%;
         min-width: 100%;
         max-width: none;

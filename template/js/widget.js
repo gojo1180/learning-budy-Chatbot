@@ -56,7 +56,6 @@
                                     <span v-if="isLoggedIn" class="text-xs font-normal opacity-80">Halo, {{ userEmail }}</span>
                                     <span v-else class="text-xs font-normal opacity-80 text-yellow-300">Mode Tamu</span>
                                 </div>
-                                <!-- Wrapper Tombol Header -->
                                 <div class="chat-header-actions">
                                     <button class="chat-header-fullscreen" title="Fullscreen" @click="goFullscreen">
                                         <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
@@ -119,7 +118,10 @@
 
                         <!-- Mode Fullscreen -->
                         <template v-if="windowState === 'fullscreen'">
-                            <div class="fs-sidebar" :class="{ 'quiz-active': showQuizPanel }">
+                            <!-- Sidebar Dinamis: Bisa untuk Kuis ATAU Roadmap Progress -->
+                            <div class="fs-sidebar" :class="{ 'active': showQuizPanel || showProgressPanel }">
+                                
+                                <!-- A. PANEL KUIS -->
                                 <div v-show="showQuizPanel" class="fs-quiz-container">
                                     <div class="fs-quiz-header">
                                         <h4>{{ isAssessmentMode ? 'Tes Minat' : 'Kuis Teknis' }}</h4>
@@ -155,11 +157,62 @@
                                         </template>
                                     </div>
                                 </div>
+
+                                <!-- B. PANEL PROGRESS (ROADMAP BARU) -->
+                                <div v-show="showProgressPanel" class="fs-progress-container">
+                                    <div class="fs-quiz-header" style="background: var(--col-navy);">
+                                        <h4>Roadmap Belajarmu</h4>
+                                        <span class="fs-quiz-desc" style="font-size: 0.85em; opacity: 0.8;">
+                                            Perjalanan menuju kelulusan
+                                        </span>
+                                    </div>
+
+                                    <div class="fs-roadmap-body">
+                                        <!-- Loop setiap kursus -->
+                                        <div v-for="(course, idx) in progressContext" :key="idx" class="roadmap-course-group">
+                                            <h5 class="roadmap-course-title">{{ course.kursus }}</h5>
+                                            
+                                            <div class="roadmap-timeline">
+                                                <!-- 1. Modul Saat Ini (Active) -->
+                                                <div class="roadmap-item active">
+                                                    <div class="roadmap-dot pulse"></div>
+                                                    <div class="roadmap-content">
+                                                        <span class="roadmap-tag">Sedang Dipelajari</span>
+                                                        <p>{{ course.sedang_dipelajari }}</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 2. Modul Akan Datang (Loop N+5) -->
+                                                <div v-for="(topic, tIdx) in course.akan_datang" :key="tIdx" class="roadmap-item future">
+                                                    <div class="roadmap-dot"></div>
+                                                    <div class="roadmap-content">
+                                                        <span class="roadmap-date">Next Step {{ tIdx + 1 }}</span>
+                                                        <p>{{ topic }}</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- 3. Target Akhir -->
+                                                <div class="roadmap-item target">
+                                                    <div class="roadmap-dot star">★</div>
+                                                    <div class="roadmap-content">
+                                                        <span class="roadmap-date">Goal</span>
+                                                        <p>Lulus & Dapat Sertifikat</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="fs-quiz-footer">
+                                         <button class="fs-quiz-nav-btn" @click="showProgressPanel = false" style="width:100%">Tutup Roadmap</button>
+                                    </div>
+                                </div>
+
                             </div>
+
                             <div class="fs-chat-area">
                                 <div class="fs-header">
                                     <span>Chat</span>
-                                    <!-- Tombol Minimize & Close -->
                                     <div class="fs-controls">
                                         <button class="fs-btn fs-minimize" title="Kecilkan (Minimize)" @click="minimizeChat">
                                             <svg fill="currentColor" viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
@@ -178,7 +231,7 @@
                                         </div>
                                         <div v-if="msg.sender === 'klien'" class="fs-avatar user"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path></svg><div class="fs-avatar-tie"></div></div>
                                     </div>
-                                    <div v-if="isLoading && !showQuizPanel" class="fs-message buddy">
+                                    <div v-if="isLoading && !showQuizPanel && !showProgressPanel" class="fs-message buddy">
                                         <div class="fs-avatar buddy"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path></svg></div>
                                         <div class="fs-bubble typing"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>
                                     </div>
@@ -252,7 +305,17 @@
           messages: [],
           currentFlow: "main_menu",
           inputPlaceholder: "Ketik atau pilih opsi...",
+          
+          // --- State Kuis ---
           showQuizPanel: false,
+          quizContext: { interest: null, questions: [], currentQuestionIndex: 0, userAnswers: {} },
+          isAssessmentMode: false,
+          assessmentContext: { questions: [], currentQuestionIndex: 0, answers: [] },
+
+          // --- State Roadmap (BARU) ---
+          showProgressPanel: false, 
+          progressContext: [],
+
           chatMode: "to the point",
           isSelectorOpen: false, 
           chatModes: [
@@ -281,9 +344,6 @@
               icon: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>` 
             }
           ],
-          quizContext: { interest: null, questions: [], currentQuestionIndex: 0, userAnswers: {} },
-          isAssessmentMode: false,
-          assessmentContext: { questions: [], currentQuestionIndex: 0, answers: [] },
         };
       },
       mounted() {
@@ -526,6 +586,7 @@
           }
         },
 
+        // --- UPDATE FUNGSI PROGRESS UNTUK MEMUNCULKAN ROADMAP ---
         async callProgressApi(emailInput = null) {
           try {
             const response = await fetch(`${API_BASE_URL}/api/v1/progress/`, {
@@ -542,6 +603,18 @@
             if (!response.ok) {
               throw new Error(data.detail || data.bot_response || `Gagal mengecek progres`);
             }
+
+            // --- LOGIKA BARU: TAMPILKAN ROADMAP JIKA ADA DATA ---
+            if (data.progress_data && data.progress_data.length > 0) {
+                this.progressContext = data.progress_data;
+                
+                // Pastikan panel kuis mati, nyalakan roadmap, dan go fullscreen
+                this.showQuizPanel = false;
+                this.showProgressPanel = true;
+                this.goFullscreen();
+            }
+            // ----------------------------------------------------
+
             this.messages.push({ sender: "server", text: data.bot_response });
           } catch (error) {
             console.error("Error di callProgressApi:", error);
@@ -589,6 +662,7 @@
         
         async startQuizFlow() {
           this.resetQuizContext();
+          this.showProgressPanel = false; // Pastikan roadmap tertutup
           const response = await fetch(`${API_BASE_URL}/api/v1/recommend/interests`);
           if (!response.ok) throw new Error(`API /recommend/interests gagal`);
           const data = await response.json();
@@ -668,6 +742,7 @@
         },
         async startAssessmentFlow() {
           this.isAssessmentMode = true;
+          this.showProgressPanel = false; // Pastikan roadmap tertutup
           this.isLoading = true;
           this.goFullscreen();
           try {
