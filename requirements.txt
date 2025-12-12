@@ -8,4 +8,4 @@ python-multipart
 supabase
 python-jose       
 passlib           
-email-validator   
+email-validator

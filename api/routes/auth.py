@@ -10,12 +10,12 @@ router = APIRouter(prefix="/auth", tags=["Autentikasi"])
 @router.post("/register", response_model=UserResponse)
 async def register(user_in: UserRegister):
     """
-    Mendaftarkan user baru ke tabel 'public.users' (Custom Table).
+    Mendaftarkan user baru ke tabel 'public.users'.
     """
-    # 1. Cek apakah email sudah ada (Supabase Filter)
+    # 1. Cek email
     existing_user = await call_supabase_api(
         "users",
-        db_type="mock", # Asumsi tabel users ada di Mock DB agar satu tempat dengan data siswa
+        db_type="mock", 
         params={"email": f"eq.{user_in.email}", "select": "id"}
     )
     
@@ -30,7 +30,6 @@ async def register(user_in: UserRegister):
         "email": user_in.email,
         "password_hash": hashed_pw,
         "full_name": user_in.full_name
-        # Kita pakai 1 email saja, jadi tidak simpan student_email
     }
 
     result = await call_supabase_api(
@@ -43,7 +42,6 @@ async def register(user_in: UserRegister):
     if not result:
         raise HTTPException(status_code=500, detail="Gagal menyimpan user ke database.")
 
-    # Return data user (tanpa password)
     created_user = result[0]
     return UserResponse(
         id=created_user['id'], 
@@ -64,7 +62,6 @@ async def login(login_data: UserLogin):
     )
 
     if not users:
-        # Gunakan pesan umum agar hacker tidak tahu email valid/tidak
         raise HTTPException(status_code=400, detail="Email atau password salah")
     
     user = users[0]
@@ -76,7 +73,7 @@ async def login(login_data: UserLogin):
     # 3. Buat Token Akses
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user['email']}, # Kita simpan email di dalam token
+        data={"sub": user['email']}, 
         expires_delta=access_token_expires
     )
 

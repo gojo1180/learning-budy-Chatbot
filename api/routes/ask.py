@@ -11,29 +11,21 @@ async def handle_ask(request: AskRequest):
     konteks_str = ""
     sumber_konteks = ""
 
-    # --- SKENARIO A: ON-PAGE CONTEXT (Prioritas) ---
     if request.full_page_content:
         sumber_konteks = "Halaman Web yang Sedang Dibuka User"
         konteks_str = f"""
-        KONTEKS HALAMAN (MODUL BELAJAR):
-        ================================
-        {request.full_page_content[:20000]} # Batasi 20rb karakter agar aman
+        KONTEKS HALAMAN
+        {request.full_page_content[:20000]}
         ================================
         """
         if request.visible_text:
             konteks_str += f"""
-            
-            BAGIAN YANG SEDANG DIBACA/DILIHAT USER SAAT INI (FOKUS):
-            --------------------------------------------------------
             {request.visible_text[:5000]}
-            --------------------------------------------------------
             """
         else:
              konteks_str += "\n(User sedang melihat halaman ini secara umum)"
-
-    # --- SKENARIO B: DATABASE RAG (Fallback) ---
     else:
-        sumber_konteks = "Database Tutorial (Pencarian Keyword)"
+        sumber_konteks = "Database Tutorial"
         search_query = request.question.replace(" ", "%") 
         
         konteks_tutorials = await call_supabase_api(
@@ -70,6 +62,7 @@ async def handle_ask(request: AskRequest):
             "Jawab dengan gaya santai dan akrab, seperti teman yang membantu belajar dengan menggunakan analogi agar lebih mudah dipahami. "
             "Gunakan bahasa yang ringan, hangat, dan relatable."
             "gunakan analogi dan contoh sehari-hari."
+            
         )
     elif request.preset == "instruktor":
         prompt_nada = (
@@ -88,10 +81,14 @@ async def handle_ask(request: AskRequest):
         )
 
     prompt_final = f"""
-    Anda adalah Asisten Pengajar yang cerdas.
+    Kamu adalah learning buddy.
+    rules:
+    HANYA JAWAB TERKAIT IT termasuk matematika dan ilmu yang berkaitan (CLOUD,DATA,MATH ETC ), BERIKAN MAAF JIKA DILUAR BIDANG IT, JANGAN MENJAWAB DILUAR BIDANG IT.
     
-    {konteks_str}
+    jika pertanyaan berikan sanjungan atau pujian singkat pada pertanyaan tersebut sebelum menjawab.
 
+    sumber konteks
+    {konteks_str}
     {history_str}
     
     Tugas Anda:

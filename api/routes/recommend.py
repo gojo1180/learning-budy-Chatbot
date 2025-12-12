@@ -65,7 +65,6 @@ async def get_quiz(kategori_minat: str = Query(..., example="Android Developer")
     """Mengambil 5 soal acak per level dari DB Mock"""
     tech_category_mock = CATEGORY_MAP.get(kategori_minat, kategori_minat)
     
-    # Ambil kolom difficulty juga untuk referensi (opsional di frontend)
     select_query = "id,question_desc,option_1,option_2,option_3,option_4,difficulty"
     
     try:
@@ -97,7 +96,6 @@ async def get_quiz(kategori_minat: str = Query(..., example="Android Developer")
         ) for item in final_questions
     ]
 
-
 @router.post("/submit", response_model=SubmitResponse)
 async def handle_submission(request: SubmitRequest):
     """
@@ -115,7 +113,7 @@ async def handle_submission(request: SubmitRequest):
         "Tech Questions", db_type="mock",
         params={
             "id": f"in.({','.join(map(str, question_ids))})",
-            "select": "id,question_desc,correct_answer,topic_tag,difficulty" # Tambah difficulty
+            "select": "id,question_desc,correct_answer,topic_tag,difficulty"
         }
     )
     
@@ -136,7 +134,7 @@ async def handle_submission(request: SubmitRequest):
             data_soal = qa_map[answer.question_id]
             user_ans = answer.selected_answer
             correct_ans = data_soal['correct_answer']
-            difficulty = data_soal.get('difficulty', 'beginner') # Default beginner
+            difficulty = data_soal.get('difficulty', 'beginner') 
             
             # Ambil nilai bobot (1, 3, atau 5)
             weight = SCORE_WEIGHTS.get(difficulty, 1)

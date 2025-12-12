@@ -11,15 +11,12 @@ router = APIRouter(prefix="/assessment", tags=["Asesmen Minat"])
 async def get_assessment_questions():
     """
     Mengambil SEMUA data dari tabel 'interest_questions'.
-    Tidak ada batasan limit, semua baris akan diambil dan dikelompokkan.
     """
-    
     raw_data = await call_supabase_api(
         "Interest Questions", 
         db_type="mock",
         params={
             "select": "question_desc,option_text,category"
-            
         }
     )
     
@@ -47,7 +44,6 @@ async def get_assessment_questions():
 
     return list(grouped_questions.values())
 
-
 @router.post("/submit", response_model=AssessmentResponse)
 async def submit_assessment(request: AssessmentSubmitRequest):
     """
@@ -67,7 +63,7 @@ async def submit_assessment(request: AssessmentSubmitRequest):
     winner_category = max(vote_count, key=vote_count.get)
     
     prompt = f"""
-    Seorang siswa telah mengikuti tes minat bakat IT.
+    Seorang siswa telah mengikuti tes minat bakat.
     Hasilnya, minat terkuat dia adalah di bidang: '{winner_category}'.
     
     Tolong berikan respons (Bahasa Indonesia) yang:

@@ -11,7 +11,7 @@ CLIENT_CONFIGS = {
             "apikey": settings.DICODING_SUPABASE_KEY,
             "Authorization": f"Bearer {settings.DICODING_SUPABASE_KEY}",
             "Content-Type": "application/json",
-            "Prefer": "return=representation" # Agar Supabase mengembalikan data setelah insert
+            "Prefer": "return=representation"
         }
     },
     "mock": {
@@ -27,11 +27,11 @@ CLIENT_CONFIGS = {
 
 async def call_supabase_api(
     endpoint: str, 
-    method: Literal["GET", "POST"] = "GET", # Tambah dukungan POST
+    method: Literal["GET", "POST"] = "GET", 
     db_type: Literal["dicoding", "mock"] = "dicoding", 
     params: Optional[Dict[str, Any]] = None,
-    json_body: Optional[Dict[str, Any]] = None # Tambah body untuk insert
-) -> Optional[Any]: # Return Any karena bisa List atau Dict
+    json_body: Optional[Dict[str, Any]] = None
+) -> Optional[Any]: 
     
     config = CLIENT_CONFIGS.get(db_type)
     if not config:
@@ -63,7 +63,6 @@ async def call_supabase_api(
         
         except httpx.HTTPStatusError as e:
             print(f"Error HTTP Supabase ({db_type} - {method}): {e}")
-            # Coba print detail error dari Supabase jika ada
             try:
                 print("Detail:", e.response.text)
             except:

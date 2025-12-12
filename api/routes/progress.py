@@ -10,11 +10,9 @@ router = APIRouter(prefix="/progress", tags=["Progres Siswa"])
 @router.post("/", response_model=ProgressResponse)
 async def handle_progress(current_email: str = Depends(get_current_user_email)):
     """
-    FITUR 3 (SNEAK PEEK + DUAL PAYLOAD):
-    - Bot Response: Motivasi teks.
-    - Progress Data: JSON data roadmap (N+5) untuk dikonsumsi Frontend.
+    - Bot Response.
+    - Progress Data JSON data roadmap (N+5) untuk Frontend.
     """
-    
     # 1. Ambil Data Progres dari DB Mock
     raw_data = await call_supabase_api(
         "Student Progress", 
@@ -46,7 +44,7 @@ async def handle_progress(current_email: str = Depends(get_current_user_email)):
         if total_modul > 0:
             persen = round((selesai_modul / total_modul) * 100, 1)
 
-        # --- LOGIC SNEAK PEEK (N+5) ---
+        # --- LOGIC ROADMAP ---
         current_focus = "Menunggu Kelulusan / Ujian"
         upcoming_topics = [] 
         
@@ -92,10 +90,10 @@ async def handle_progress(current_email: str = Depends(get_current_user_email)):
         elif is_lulus:
             current_focus = "LULUS (Selesai)"
 
-        # Simpan Info Lengkap (Ini yang akan dimakan Frontend)
+        # untuk FE roadmap
         info = {
             "kursus": course_name,
-            "progres_persen": persen, # Integer/Float biar gampang diolah FE
+            "progres_persen": persen, # Integer/Float 
             "total_modul": total_modul,
             "selesai_modul": selesai_modul,
             "status": "LULUS" if is_lulus else "BELUM LULUS",
@@ -105,7 +103,7 @@ async def handle_progress(current_email: str = Depends(get_current_user_email)):
         }
         summary_list.append(info)
         
-        # Logic untuk Prompt AI (Narasi)
+        # Logic Prompt AI 
         if is_lulus:
             if nilai_ujian:
                 total_score_sum += int(nilai_ujian)
@@ -126,7 +124,7 @@ async def handle_progress(current_email: str = Depends(get_current_user_email)):
     {json.dumps(summary_list, indent=2)}
     """
 
-    # 4. Prompt Gemini (Instruksi Narasi)
+    # 4. Prompt MODEL
     prompt = f"""
     Kamu adalah Learning Buddy.
     Berikan laporan progres belajar kepada user dengan gaya santai tapi tetap formal dengan nada gembira.
@@ -135,7 +133,7 @@ async def handle_progress(current_email: str = Depends(get_current_user_email)):
     {context_str}
     
     Tugas:
-    1. Sapa user.
+    1. Sapa user dan berikan semangat terkait progress nya.
     2. FOKUS UTAMA: Bahas kelas yang BELUM LULUS.
        - Sebutkan modul yang sedang dia pelajari ("sedang_dipelajari").
        - BERIKAN SNEAK PEEK: Ceritakan secara singkat apa yang akan dia pelajari selanjutnya ("akan_datang").
